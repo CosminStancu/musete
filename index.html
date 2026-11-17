@@ -230,7 +230,18 @@ button.score:active{background:var(--surface2)}
 .tg{display:inline-block;font-style:normal;font-size:11px;font-weight:600;padding:0 6px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--line);color:var(--muted);margin-left:6px;white-space:nowrap}
 .match{cursor:pointer}
 .more{margin-top:10px}
-.fchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+/* filtros de "Todas las partidas": fijos arriba junto a la barra */
+.fbar{position:sticky;top:0;z-index:3;background:var(--bg);padding-bottom:8px;margin-bottom:4px;box-shadow:0 -40px 0 var(--bg)}
+.frow{display:flex;gap:8px;align-items:center}
+.fbtn{flex:1;min-width:0;height:40px;padding:0 12px;border-radius:99px;font-size:14px;font-weight:500;color:var(--text);
+  box-shadow:inset 0 0 0 1px var(--line);display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbtn i{font-style:normal;font-size:11px;color:var(--muted);transition:transform .15s}
+.fbtn.open i{transform:rotate(180deg)}
+.fbtn.on{background:var(--accent);color:var(--on-accent);box-shadow:none}.fbtn.on i{color:inherit}
+.fx{width:40px;height:40px}
+.fpanel{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:10px;border-radius:16px;background:var(--surface);border:1px solid var(--line);max-height:42vh;overflow:auto}
+.fpanel small{width:100%;font-size:12px;color:var(--muted);margin:2px 2px 0}
+.fpanel .qp{height:34px}
 .qp.on{background:var(--accent);color:var(--on-accent);box-shadow:none}
 .mrec{margin:0 0 8px;font-size:14px;color:var(--muted)}.mrec b{color:var(--text)}
 .ch{width:100%;height:auto;margin:6px 0}.ch .gr{stroke:var(--line);stroke-width:1}.ch text{fill:var(--muted);font-size:9px}
@@ -725,26 +736,32 @@ function mRow(m){
 
 /* Todas las partidas, con filtro: 1 jugador marcado → sus partidas; 2 → las que jugaron juntos de pareja.
    El filtro vive en memoria: se mantiene al abrir el detalle de una partida y volver. */
-const mf={p:[]};
+const mf={p:[],open:null,pp:[]};
 function vMatches(){
   const L=S.league,sel=mf.p,all=allMatches().reverse();
   const team=(m,id)=>m.a.includes(id)?0:m.b.includes(id)?1:-1;
   const ms=sel.length===2?all.filter(m=>{const t=team(m,sel[0]);return t>=0&&t===team(m,sel[1])})
     :sel.length===1?all.filter(m=>team(m,sel[0])>=0):all;
   // Balance del filtro: victorias del jugador o de la pareja
-  let rec='';
+  let rec=`<p class="mrec">${ms.length} partidas</p>`;
   if(sel.length){const g=ms.filter(m=>team(m,sel[0])===m.w).length;
     rec=`<p class="mrec"><b>${sel.map(pname).map(esc).join(' + ')}</b> · ${ms.length} ${ms.length===1?'partida':'partidas'} · ${g} G · ${ms.length-g} P${ms.length?` · ${Math.round(100*g/ms.length)}%`:''}</p>`}
   const pairs=stats().pairs.slice().sort((x,y)=>y.pj-x.pj).slice(0,8);
-  const played=new Set(all.flatMap(m=>[...m.a,...m.b]));
-  return bar('Todas las partidas')+
-  `<section class="card"><h3>Filtrar</h3>
-    <p class="hint">Toca un jugador para ver sus partidas, o dos para las que jugaron de pareja.</p>
-    <div class="fchips">${L.players.filter(p=>played.has(p.id)).map(p=>`<button class="qp ${sel.includes(p.id)?'on':''}" data-a="mfP" data-p="${p.id}">${esc(p.name)}</button>`).join('')}</div>
-    ${pairs.length?`<div class="fchips">${pairs.map(o=>`<button class="qp ${sel.length===2&&o.ids.every(i=>sel.includes(i))?'on':''}" data-a="mfPair" data-p="${o.ids.join(',')}">${o.ids.map(pname).map(esc).join(' + ')}</button>`).join('')}</div>`:''}
-    ${sel.length?`<button class="btn ghost block" data-a="mfClear">Quitar filtro</button>`:''}
-  </section>
-  <section class="card"><h3>${sel.length?'Partidas filtradas':'Partidas'}</h3>${rec}
+  const played=L.players.filter(p=>all.some(m=>team(m,p.id)>=0));
+  const names=ids=>ids.map(pname).map(esc).join(' + ');
+  // Desplegable abierto: Jugador (un toque filtra) o Pareja (habituales, o dos toques en cualquier jugador)
+  const panel=mf.open==='p'
+    ?`<div class="fpanel">${played.map(p=>`<button class="qp ${sel.length===1&&sel[0]===p.id?'on':''}" data-a="mfP" data-p="${p.id}">${esc(p.name)}</button>`).join('')}</div>`
+    :mf.open==='pair'
+    ?`<div class="fpanel">${pairs.length?`<small>Habituales</small>${pairs.map(o=>`<button class="qp ${sel.length===2&&o.ids.every(i=>sel.includes(i))?'on':''}" data-a="mfPair" data-p="${o.ids.join(',')}">${names(o.ids)}</button>`).join('')}`:''}
+      <small>${mf.pp.length?`${names(mf.pp)} + …`:'O elige dos jugadores'}</small>${played.map(p=>`<button class="qp ${mf.pp.includes(p.id)?'on':''}" data-a="mfP2" data-p="${p.id}">${esc(p.name)}</button>`).join('')}</div>`:'';
+  return `<div class="fbar">${bar('Todas las partidas')}
+    <div class="frow">
+      <button class="fbtn ${mf.open==='p'?'open':''} ${sel.length===1?'on':''}" data-a="mfOpen" data-p="p">${sel.length===1?names(sel):'Jugador'} <i>▾</i></button>
+      <button class="fbtn ${mf.open==='pair'?'open':''} ${sel.length===2?'on':''}" data-a="mfOpen" data-p="pair">${sel.length===2?names(sel):'Pareja'} <i>▾</i></button>
+      ${sel.length?`<button class="ic fx" data-a="mfClear" aria-label="Quitar filtro">✕</button>`:''}
+    </div>${panel}</div>
+  <section class="card">${rec}
     ${ms.length?ms.map(mRow).join(''):`<p class="hint">${sel.length===2?'No han jugado juntos de pareja.':'No hay partidas.'}</p>`}
   </section>`;
 }
@@ -1051,9 +1068,12 @@ Object.assign(A,{
   colors(){modal={type:'color'};render()},
   setColor(hex){S.settings.color=hex||null;save();render()},
   // filtro de "Todas las partidas" (vMatches)
-  mfP(id){const i=mf.p.indexOf(id);if(i>=0)mf.p.splice(i,1);else{if(mf.p.length===2)mf.p.shift();mf.p.push(id)}render()},
-  mfPair(a,b){mf.p=mf.p.length===2&&mf.p.includes(a)&&mf.p.includes(b)?[]:[a,b];render()},
-  mfClear(){mf.p=[];render()},
+  mfOpen(k){mf.open=mf.open===k?null:k;mf.pp=[];render()},
+  mfP(id){mf.p=mf.p.length===1&&mf.p[0]===id?[]:[id];mf.open=null;render()},
+  mfPair(a,b){mf.p=[a,b];mf.open=null;render()},
+  mfP2(id){const i=mf.pp.indexOf(id);if(i>=0)mf.pp.splice(i,1);else mf.pp.push(id);
+    if(mf.pp.length===2){mf.p=mf.pp;mf.pp=[];mf.open=null}render()},
+  mfClear(){mf.p=[];mf.pp=[];mf.open=null;render()},
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render());
 
@@ -1161,7 +1181,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261117150004';
+const BUILD='20261117150914';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
