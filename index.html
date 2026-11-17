@@ -1066,8 +1066,9 @@ function landscape(on){
   }catch(e){}
 }
 render();sync();
-// Versión web (GitHub Pages): funciona sin conexión y se actualiza sola. No en la app Android ni en el servidor de desarrollo.
-if('serviceWorker' in navigator&&location.protocol==='https:'&&!window.Capacitor)navigator.serviceWorker.register('sw.js').catch(()=>{});
+// Versión publicada (navegador y app Android, que la carga de GitHub Pages): funciona sin conexión
+// y se actualiza sola. No en el servidor de desarrollo ni en una copia empaquetada (https://localhost).
+if('serviceWorker' in navigator&&location.protocol==='https:'&&location.hostname!=='localhost')navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
