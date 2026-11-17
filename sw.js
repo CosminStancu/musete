@@ -1,7 +1,7 @@
 // Service worker de la versión web.
 // La app (index.html) se pide primero a la red, así cada versión publicada llega al abrir;
 // sin conexión se sirve la última copia guardada. Las llamadas a la liga (Supabase) no se tocan.
-const CACHE = 'musete-v1';
+const CACHE = 'musete-v2';
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -17,8 +17,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  // cache:'no-cache' → pregunta siempre a GitHub (que si no, deja usar una copia de hasta 10 min)
   e.respondWith(
-    fetch(req)
+    fetch(req, { cache: 'no-cache' })
       .then(res => {
         if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
         return res;

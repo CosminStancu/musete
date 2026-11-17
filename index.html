@@ -1119,6 +1119,22 @@ function landscape(on){
   }catch(e){}
 }
 render();sync();
+// Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
+// BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
+const BUILD='20261117145226';
+let upChecking=false;
+async function checkUpdate(){
+  if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
+  upChecking=true;
+  try{
+    const html=await (await fetch('./?u='+Date.now(),{cache:'no-store'})).text();
+    const m=html.match(/const BUILD='([^']+)'/);
+    if(m&&m[1]!==BUILD&&m[1]!=='dev'){toast('Actualizando…');setTimeout(()=>location.reload(),400)}
+  }catch(e){}
+  upChecking=false;
+}
+checkUpdate();
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
 // Versión publicada (navegador y app Android, que la carga de GitHub Pages): funciona sin conexión
 // y se actualiza sola. No en el servidor de desarrollo ni en una copia empaquetada (https://localhost).
 if('serviceWorker' in navigator&&location.protocol==='https:'&&location.hostname!=='localhost')navigator.serviceWorker.register('sw.js').catch(()=>{});
