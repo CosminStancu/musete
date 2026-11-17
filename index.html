@@ -968,6 +968,29 @@ function run(a,p){
 }
 
 /* ───────── Render y eventos ───────── */
+// Pinta el HTML nuevo tocando solo lo que cambia: los nodos que siguen igual no se recrean,
+// así no se repiten las animaciones de entrada (diálogos) ni hay parpadeo al pulsar.
+function patch(el,html){
+  const t=document.createElement(el.tagName);t.innerHTML=html;
+  patchKids(el,t);
+}
+function patchKids(from,to){
+  const a=[...from.childNodes],b=[...to.childNodes];
+  b.forEach((n,i)=>{
+    const o=a[i];
+    if(!o)from.appendChild(n);
+    else if(o.nodeType!==n.nodeType||o.nodeName!==n.nodeName)from.replaceChild(n,o);
+    else if(o.nodeType===1)patchEl(o,n);
+    else if(o.nodeValue!==n.nodeValue)o.nodeValue=n.nodeValue;
+  });
+  for(let i=b.length;i<a.length;i++)a[i].remove();
+}
+function patchEl(o,n){
+  for(const{name}of[...o.attributes])if(!n.hasAttribute(name))o.removeAttribute(name);
+  for(const{name,value}of[...n.attributes])if(o.getAttribute(name)!==value)o.setAttribute(name,value);
+  if(o.tagName==='INPUT'&&o!==document.activeElement){const v=n.getAttribute('value')||'';if(o.value!==v)o.value=v}
+  patchKids(o,n);
+}
 function render(){
   const locked=!S.code,v=locked?'lock':view(),st=S.settings;
   if(st.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=st.theme;
@@ -975,8 +998,8 @@ function render(){
   const app=document.getElementById('app');
   app.className='v-'+(['mus','settings','liga'].includes(v)?v:'home');
   landscape(v==='mus');
-  app.innerHTML=html;
-  document.getElementById('modal').innerHTML=locked?'':vModal();
+  patch(app,html);
+  patch(document.getElementById('modal'),locked?'':vModal());
   document.querySelector('meta[name=theme-color]').content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
   wake();
 }
@@ -1004,7 +1027,7 @@ document.addEventListener('input',e=>{
   const t=e.target;
   if(t.dataset.g){lgDraft[t.dataset.g]=t.value;return}
   if(modal&&t.dataset.k)modal.d[t.dataset.k]=t.value;
-  if(modal&&t.dataset.k==='q'){const g=document.getElementById('pgrid');if(g)g.innerHTML=pgrid(modal.d)} // filtra sin perder el foco
+  if(modal&&t.dataset.k==='q'){const g=document.getElementById('pgrid');if(g)patch(g,pgrid(modal.d))} // filtra sin perder el foco
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.enter){run(e.target.dataset.enter);return}
