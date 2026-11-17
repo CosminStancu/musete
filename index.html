@@ -74,6 +74,14 @@ svg{display:block}
 .row{display:flex;gap:8px}.row>*{flex:1}
 
 /* inicio */
+.cdot{width:22px;height:22px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--line)}
+.hint{color:var(--muted);font-size:14px;margin:-4px 0 14px}
+.swatches{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:14px}
+.swatch{aspect-ratio:1;border-radius:50%;max-width:48px;width:100%;justify-self:center}
+.swatch.on{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--text)}
+.picker{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--surface2);cursor:pointer}
+.picker input{width:44px;height:36px;border:0;padding:0;background:none;border-radius:8px;cursor:pointer}
+.picker span{font-weight:500}
 .hero{padding:20px 4px 18px}
 .hero .logo{font:700 44px/1 var(--display);letter-spacing:-.01em}
 .hero .logo i{color:var(--accent);font-style:normal}
@@ -662,7 +670,7 @@ const bar=(title,right='')=>`<header class="bar"><button class="ic" data-a="back
 /* ───────── Vistas ───────── */
 function vHome(){
   const m=S.mus,L=S.league,st=stats(),n=allMatches().length;
-  return `<header class="bar"><h1></h1><button class="ic" data-a="go" data-p="settings" aria-label="Ajustes">${I.cfg}</button></header>
+  return `<header class="bar"><h1></h1><button class="ic" data-a="colors" aria-label="Color de la app"><span class="cdot"></span></button><button class="ic" data-a="go" data-p="settings" aria-label="Ajustes">${I.cfg}</button></header>
   <div class="hero"><div class="logo">Muse<i>te</i></div><p>Marcador de mus y liga del grupo.</p></div>
   <section class="game"><h2>Mus</h2><p>Elige quién juega; la partida cuenta para la liga.</p>
     ${m?`<div class="saved">${esc(m.a)} ${m.pa} – ${m.pb} ${esc(m.b)}</div>`:''}
@@ -762,7 +770,12 @@ function vSettings(){
 function vModal(){
   const m=modal;if(!m)return '';
   let h='',lock=false;
-  if(m.type==='musSetup'){const d=m.d,n0=d.t[0].length,n1=d.t[1].length,ready=n0===2&&n1===2,act=n0<2?0:n1<2?1:-1;
+  if(m.type==='color'){const cur=S.settings.color;
+    h=`<h2>Color de la app</h2><p class="hint">Solo en este móvil. Los tonos se ajustan solos para que todo se lea bien.</p>
+    <div class="swatches">${COLORS.map(x=>`<button class="swatch ${cur===x?'on':''}" style="background:${x}" data-a="setColor" data-p="${x}" aria-label="Color ${x}"></button>`).join('')}</div>
+    <label class="picker"><input type="color" data-color="1" value="${cur||COLORS[0]}"><span>Elegir cualquier color</span></label>
+    <div class="row"><button class="btn ghost" data-a="setColor">Por defecto</button><button class="btn primary" data-a="close">Listo</button></div>`;
+  }else if(m.type==='musSetup'){const d=m.d,n0=d.t[0].length,n1=d.t[1].length,ready=n0===2&&n1===2,act=n0<2?0:n1<2?1:-1;
     // Una sola pantalla: los 2 primeros toques forman el equipo 1, los 2 siguientes el equipo 2
     const slot=t=>{const n=d.t[t].length;
       return `<div class="slot t${t} ${act===t?'act':''}"><div><small>Equipo ${t+1}</small>
@@ -967,6 +980,44 @@ function run(a,p){
   if(A[a])A[a](...args);
 }
 
+/* ───────── Color de la app ─────────
+   Cada móvil elige su color (S.settings.color). De él se toma el tono y la saturación y se generan
+   todos los colores (fondo, superficies, acento, equipos) con luminosidades fijas, para que se lea bien
+   en modo oscuro y claro elija el color que elija. Sin color elegido se usan los del CSS. */
+const COLORS=['#94d5a2','#7fb8ff','#b9a2ff','#ff9fc8','#ff9e7a','#f0cf62','#62d3cb','#e57373'];
+const CKEYS=['--bg','--surface','--surface2','--line','--text','--muted','--accent','--on-accent','--a','--a-soft','--b','--b-soft','--ok','--shadow'];
+function toHS(hex){
+  const n=parseInt(hex.slice(1),16),r=(n>>16&255)/255,g=(n>>8&255)/255,b=(n&255)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,l=(mx+mn)/2;
+  if(!d)return[0,0];
+  const s=d/(1-Math.abs(2*l-1));
+  const h=mx===r?((g-b)/d+6)%6:mx===g?(b-r)/d+2:(r-g)/d+4;
+  return[Math.round(h*60),Math.round(s*100)];
+}
+const isDark=()=>S.settings.theme==='dark'||(S.settings.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);
+function paint(){
+  const st=document.documentElement.style,hex=S.settings.color;
+  if(!/^#[0-9a-f]{6}$/i.test(hex||'')){CKEYS.forEach(k=>st.removeProperty(k));return}
+  const[h,s0]=toHS(hex),gray=s0<8,s=gray?s0:Math.max(35,Math.min(80,s0)),hb=(h+58)%360;
+  const c=(H,S_,L,a)=>`hsl(${H} ${S_}% ${L}%${a==null?'':' / '+a})`;
+  const v=isDark()
+    ?{'--bg':c(h,gray?0:13,8),'--surface':c(h,gray?0:9,11),'--surface2':c(h,gray?0:6,17),'--line':c(h,gray?0:6,27),
+      '--text':c(h,gray?0:8,88),'--muted':c(h,gray?0:5,56),'--accent':c(h,s,72),'--on-accent':c(h,gray?0:100,12),
+      '--b':c(hb,gray?0:Math.round(s*.8),76),'--a-soft':c(h,s,72,.14),'--b-soft':c(hb,gray?0:Math.round(s*.8),76,.14),
+      '--shadow':'0 10px 30px rgba(0,0,0,.5)'}
+    :{'--bg':c(h,gray?0:40,97),'--surface':'#fff','--surface2':c(h,gray?0:15,90),'--line':c(h,gray?0:10,77),
+      '--text':c(h,gray?0:10,10),'--muted':c(h,gray?0:5,38),'--accent':c(h,Math.min(s,60),30),'--on-accent':'#fff',
+      '--b':c(hb,gray?0:35,33),'--a-soft':c(h,Math.min(s,60),30,.12),'--b-soft':c(hb,gray?0:35,33,.12),
+      '--shadow':'0 10px 30px rgba(0,0,0,.16)'};
+  v['--a']=v['--accent'];v['--ok']=v['--accent'];
+  for(const k in v)st.setProperty(k,v[k]);
+}
+Object.assign(A,{
+  colors(){modal={type:'color'};render()},
+  setColor(hex){S.settings.color=hex||null;save();render()},
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render());
+
 /* ───────── Render y eventos ───────── */
 // Pinta el HTML nuevo tocando solo lo que cambia: los nodos que siguen igual no se recrean,
 // así no se repiten las animaciones de entrada (diálogos) ni hay parpadeo al pulsar.
@@ -994,6 +1045,7 @@ function patchEl(o,n){
 function render(){
   const locked=!S.code,v=locked?'lock':view(),st=S.settings;
   if(st.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=st.theme;
+  paint();
   const html=locked?vLock():v==='mus'?vMus():v==='settings'?vSettings():v==='liga'?vLiga():vHome();
   const app=document.getElementById('app');
   app.className='v-'+(['mus','settings','liga'].includes(v)?v:'home');
@@ -1026,6 +1078,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.dataset.g){lgDraft[t.dataset.g]=t.value;return}
+  if(t.dataset.color){S.settings.color=t.value;save();render();return} // vista previa mientras se mueve el selector
   if(modal&&t.dataset.k)modal.d[t.dataset.k]=t.value;
   if(modal&&t.dataset.k==='q'){const g=document.getElementById('pgrid');if(g)patch(g,pgrid(modal.d))} // filtra sin perder el foco
 });
