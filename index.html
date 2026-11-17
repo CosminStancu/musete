@@ -231,7 +231,10 @@ button.score:active{background:var(--surface2)}
 .match{cursor:pointer}
 .more{margin-top:10px}
 /* filtros de "Todas las partidas": fijos arriba junto a la barra */
-.fbar{position:sticky;top:0;z-index:3;background:var(--bg);padding-bottom:8px;margin-bottom:4px;box-shadow:0 -40px 0 var(--bg)}
+/* #app deja arriba el hueco de la barra de estado (safe-area); la barra fija sube hasta el borde
+   y rellena ese hueco con fondo, para que la lista no se vea por detrás de la hora y los iconos */
+.fbar{--sat:env(safe-area-inset-top,0px);position:sticky;top:calc(-1*var(--sat));margin-top:calc(-1*var(--sat));padding-top:var(--sat);
+  z-index:3;background:var(--bg);padding-bottom:8px;margin-bottom:4px}
 .frow{display:flex;gap:8px;align-items:center}
 .fbtn{flex:1;min-width:0;height:40px;padding:0 12px;border-radius:99px;font-size:14px;font-weight:500;color:var(--text);
   box-shadow:inset 0 0 0 1px var(--line);display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1181,7 +1184,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261117150914';
+const BUILD='20261117152011';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
