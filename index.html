@@ -1334,7 +1334,7 @@ const customOf=()=>{const c=S.settings.custom||{};return c[isDark()?'dark':'ligh
 const tokCv=document.createElement('canvas').getContext('2d');
 function tokHex(k){const v=getComputedStyle(document.documentElement).getPropertyValue(k).trim();
   tokCv.fillStyle='#000';tokCv.fillStyle=v||'#000';const f=tokCv.fillStyle;
-  if(f[0]==='#')return f;const m=f.match(/d+/g);return m?'#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join(''):'#000000'}
+  if(f[0]==='#')return f;const m=f.match(/\d+/g);return m?'#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join(''):'#000000'}
 function paint(){
   const st=document.documentElement.style,hex=S.settings.color;
   [...CKEYS,'--danger','--warn'].forEach(k=>st.removeProperty(k));
@@ -1484,7 +1484,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261118163305';
+const BUILD='20261118163405';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
