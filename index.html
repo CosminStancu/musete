@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#fff1c9">
+<meta name="theme-color" content="#07060f">
 <!-- PWA: instalable desde Safari (iPhone) y Chrome (Android) -->
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
@@ -13,36 +13,58 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Musete">
 <title>Musete</title>
-<!-- Tipografías: Lilita One (títulos y marcador), Nunito (interfaz), Rubik (tablas y cifras) -->
+<!-- Tipografías: Tilt Neon (rótulos de neón), Lilita One (marcador), Nunito (interfaz), Rubik (tablas y cifras) -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Tilt+Neon&family=Nunito:wght@600;700;800;900&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-/* ───────── P4 · Neobrutalismo juguetón ─────────
-   Bordes negros gordos (--line es la "tinta"), sombras duras sin desenfoque, colores planos,
-   botones que se hunden al pulsar. Todo cuelga de las variables que pisa paint(). */
+/* ───────── Q4 · Neón de bar ─────────
+   Cristal oscuro ahumado (vitrina de bar de noche) y los colores de las pegatinas convertidos en luz:
+   los bordes gordos pasan a ser tubos de neón (borde + resplandor), la sombra dura queda como reflejo
+   desplazado y los números del marcador brillan como un letrero. Todo cuelga de las variables que pisa paint(). */
 :root{
-  --bg:#fff1c9;--surface:#ffffff;--surface2:#ffe39a;--line:#14110f;
-  --text:#14110f;--muted:#5e5640;--accent:#ff6fb5;--on-accent:#14110f;
-  --a:#ff6fb5;--a-soft:rgba(255,111,181,.22);--b:#4fc3f7;--b-soft:rgba(79,195,247,.25);
-  --danger:#d92b26;--ok:#12a35f;--warn:#ffc900;--shadow:5px 5px 0 var(--line);
+  --bg:#e9e6f5;--surface:#ffffff;--surface2:#ddd5f3;--line:#1d1736;
+  --text:#1d1736;--muted:#554f75;--accent:#d11a80;--on-accent:#ffffff;
+  --a:#d11a80;--a-soft:rgba(209,26,128,.18);--b:#08729e;--b-soft:rgba(8,114,158,.18);
+  --danger:#c8202a;--ok:#0a8a4c;--warn:#f2a900;--shadow:4px 4px 0 color-mix(in srgb,var(--line) 16%,transparent);
   --ui:Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --display:"Lilita One",Nunito,system-ui,sans-serif;
+  --sign:"Tilt Neon","Lilita One",Nunito,system-ui,sans-serif; /* rótulo de neón: logo y títulos */
   --num:Rubik,Nunito,system-ui,sans-serif;
   --pop:cubic-bezier(.34,1.56,.64,1);
-  --ink-soft:color-mix(in srgb,var(--line) 28%,transparent); /* separadores de listas */
+  --ink-soft:color-mix(in srgb,var(--line) 22%,transparent); /* separadores de listas */
+  /* luz: en claro los neones se contienen (tubo oscurecido, brillo corto); en oscuro brillan a tope */
+  --ga:72%;--gsh:90%;--tm:74%;--core:0%;--gl:36%;--gi:10%;--gr:5px;--gs:10%;--rf:30%;--gt:34%;--gt2:0%;--sf:10%;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
-  --bg:#1a1530;--surface:#2a2348;--surface2:#3b3263;--line:#f3ecd6;
-  --text:#f3ecd6;--muted:#b4acd0;--accent:#ff8ac7;--on-accent:#14110f;
-  --a:#ff8ac7;--a-soft:rgba(255,138,199,.22);--b:#5ad1ff;--b-soft:rgba(90,209,255,.22);
-  --danger:#ff7a70;--ok:#4be39a;--warn:#ffd23f;--shadow:5px 5px 0 var(--line);
+  --bg:#07060f;--surface:#15122a;--surface2:#262046;--line:#e6e0ff;
+  --text:#f3efff;--muted:#a9a2cc;--accent:#ff4fa3;--on-accent:#0b0714;
+  --a:#ff4fa3;--a-soft:rgba(255,79,163,.2);--b:#27dcff;--b-soft:rgba(39,220,255,.18);
+  --danger:#ff6b6f;--ok:#3dff8f;--warn:#ffb81f;--shadow:4px 4px 0 color-mix(in srgb,var(--line) 12%,transparent);
+  --ga:58%;--gsh:84%;--tm:100%;--core:38%;--gl:78%;--gi:20%;--gr:10px;--gs:20%;--rf:34%;--gt:80%;--gt2:40%;--sf:15%;
 }}
 :root[data-theme=dark]{
-  --bg:#1a1530;--surface:#2a2348;--surface2:#3b3263;--line:#f3ecd6;
-  --text:#f3ecd6;--muted:#b4acd0;--accent:#ff8ac7;--on-accent:#14110f;
-  --a:#ff8ac7;--a-soft:rgba(255,138,199,.22);--b:#5ad1ff;--b-soft:rgba(90,209,255,.22);
-  --danger:#ff7a70;--ok:#4be39a;--warn:#ffd23f;--shadow:5px 5px 0 var(--line);
+  --bg:#07060f;--surface:#15122a;--surface2:#262046;--line:#e6e0ff;
+  --text:#f3efff;--muted:#a9a2cc;--accent:#ff4fa3;--on-accent:#0b0714;
+  --a:#ff4fa3;--a-soft:rgba(255,79,163,.2);--b:#27dcff;--b-soft:rgba(39,220,255,.18);
+  --danger:#ff6b6f;--ok:#3dff8f;--warn:#ffb81f;--shadow:4px 4px 0 color-mix(in srgb,var(--line) 12%,transparent);
+  --ga:58%;--gsh:84%;--tm:100%;--core:38%;--gl:78%;--gi:20%;--gr:10px;--gs:20%;--rf:34%;--gt:80%;--gt2:40%;--sf:15%;
 }
+/* sin backdrop-filter: cristal casi opaco (se lee igual con cualquier color pintado) */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root:root:root{--ga:94%;--gsh:97%}
+}
+/* cada elemento calcula su propio tubo: --c (color de equipo/elemento) o, si no hay, la tinta neutra */
+*{--tc:var(--c,var(--line));
+  --tube:color-mix(in srgb,var(--tc) var(--tm),var(--line));
+  --hot:color-mix(in srgb,#fff var(--core),var(--tube));
+  --glow:0 0 var(--gr) color-mix(in srgb,var(--tube) var(--gl),transparent),inset 0 0 calc(var(--gr)*.7) color-mix(in srgb,var(--tube) var(--gi),transparent);
+  --glow-s:0 0 8px color-mix(in srgb,var(--tube) var(--gs),transparent);
+  --refl:3px 3px 0 color-mix(in srgb,var(--tube) var(--rf),transparent);
+  --refl-s:2px 2px 0 color-mix(in srgb,var(--tube) var(--rf),transparent);
+  --refl-m:4px 4px 0 color-mix(in srgb,var(--tube) var(--rf),transparent);
+  --refl-l:6px 6px 0 color-mix(in srgb,var(--tube) var(--rf),transparent);
+  --tx:0 0 6px color-mix(in srgb,var(--tube) var(--gt),transparent),0 0 16px color-mix(in srgb,var(--tube) var(--gt2),transparent)}
+:root{--glass:color-mix(in srgb,var(--surface) var(--ga),transparent);--glass2:color-mix(in srgb,var(--surface2) var(--ga),transparent)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 /* fondo de puntitos tipo cuaderno */
@@ -416,6 +438,160 @@ button.set:active{transform:translate(4px,4px);box-shadow:none}
   .sheet .hrow:first-of-type{border-top:0}
   .tcard{min-height:58px;padding-top:5px;padding-bottom:5px}
   .sheet .row{margin-top:10px}
+
+/* ═════════ Q4 · capa neón (cristal + tubos + reflejo duro) ═════════ */
+/* fondo: noche con dos halos de color (equipo 1 arriba-izquierda, equipo 2 abajo-derecha) */
+body{background:radial-gradient(80vmax 60vmax at 0% 0%,color-mix(in srgb,var(--a) 20%,transparent),transparent 70%),
+  radial-gradient(70vmax 55vmax at 100% 100%,color-mix(in srgb,var(--b) 18%,transparent),transparent 70%),var(--bg)}
+button:focus-visible,input:focus-visible{outline:2.5px solid var(--hot);outline-offset:3px;box-shadow:var(--glow)}
+/* piezas de cristal que sí llevan desenfoque (pocas y grandes: el rendimiento manda) */
+.card,.game,.sheet,.set,.fpanel,.fc{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.overlay{background:color-mix(in srgb,var(--bg) 70%,transparent);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.overlay{background:color-mix(in srgb,var(--bg) 86%,transparent)}}
+
+/* barra: botones tubo cian, título de rótulo */
+.bar h1{font-family:var(--sign);font-weight:400;--c:var(--accent);color:var(--hot);text-shadow:var(--tx)}
+.bar .ic,.undoB{--c:var(--b);background:var(--glass2);border:2.5px solid var(--tube);color:var(--hot);box-shadow:var(--refl),var(--glow)}
+.bar .ic:active,.undoB:active:not(:disabled){background:color-mix(in srgb,var(--tube) 22%,var(--glass2));box-shadow:var(--glow)}
+.undoB:disabled{box-shadow:none;border-color:var(--ink-soft)}
+.ic:active{background:color-mix(in srgb,var(--tube) 20%,transparent)}
+
+/* botones */
+.btn{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-m),var(--glow)}
+.btn:active:not(:disabled){box-shadow:var(--glow)}
+.btn.primary{--c:var(--accent);background:var(--accent);color:var(--on-accent);box-shadow:var(--refl-m),var(--glow),0 0 0 1px var(--accent)}
+.btn.ghost{background:var(--glass)}
+.btn.danger{--c:var(--danger);color:var(--danger)}
+.btn:disabled{box-shadow:none;border-color:var(--ink-soft)}
+
+/* inicio: pincel y pegatinas de color */
+.paint{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.paint:active{box-shadow:none}
+.paint input{border:2.5px solid var(--tube);box-shadow:var(--glow-s)}
+.paint.set{background:color-mix(in srgb,var(--tube) 16%,var(--glass))}
+.cdot{border:2.5px solid var(--tube);box-shadow:var(--glow-s)}
+.swatch{border:2.5px solid var(--tube);box-shadow:var(--refl)}
+.swatch:active{box-shadow:none}
+.swatch.on{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--hot),0 0 14px var(--hot)}
+.picker{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-m),var(--glow-s)}
+.hero .logo{font-family:var(--sign);font-weight:400;-webkit-text-stroke:0;--c:var(--accent);color:var(--hot);
+  text-shadow:var(--tx),4px 4px 0 color-mix(in srgb,var(--tube) 30%,transparent);animation:pop .7s var(--pop),buzz 6s 1s infinite}
+.hero .logo i{--c:var(--b);color:var(--hot);text-shadow:var(--tx),4px 4px 0 color-mix(in srgb,var(--tube) 30%,transparent);animation:flick 5s 2s infinite}
+.hero p{--c:var(--b);background:var(--glass);border:2px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.game{background:color-mix(in srgb,var(--c) var(--sf),var(--glass));border:2.5px solid var(--tube);box-shadow:var(--refl-l),var(--glow)}
+.game:nth-of-type(1){--c:var(--a);background:color-mix(in srgb,var(--c) var(--sf),var(--glass))}
+.game:nth-of-type(2){--c:var(--b);background:color-mix(in srgb,var(--c) var(--sf),var(--glass))}
+.game h2{font-family:var(--sign);font-weight:400;color:var(--hot);text-shadow:var(--tx)}
+.game p{color:var(--text)}
+.game .saved{background:var(--glass);border:2px solid var(--tube);box-shadow:var(--glow-s)}
+.game .btn.primary{background:var(--c);color:var(--on-accent)}
+.game .field span{color:var(--text)}
+
+/* marcador */
+.mid h1{font-family:var(--sign);font-weight:400;--c:var(--accent);color:var(--hot);text-shadow:var(--tx)}
+.tally{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow)}
+.tally b{color:var(--hot);text-shadow:var(--tx)}
+.tname{border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow)}
+.tname .ses{background:var(--glass);color:var(--hot);border:2px solid var(--tube);text-shadow:var(--tx)}
+.bon button{background:var(--glass);border:2px solid var(--tube);box-shadow:var(--refl-s),var(--glow-s)}
+.bon button:active{background:color-mix(in srgb,var(--c) 40%,var(--glass));box-shadow:var(--glow-s)}
+button.score{background:color-mix(in srgb,var(--c) var(--sf),var(--glass));color:var(--hot);border:3.5px solid var(--tube);
+  box-shadow:var(--refl-l),var(--glow);text-shadow:var(--tx)}
+button.score:active{box-shadow:var(--glow)}
+.pm button{background:var(--glass);color:var(--hot);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow)}
+.pm button:active:not(:disabled){box-shadow:var(--glow)}
+.pm .plus{background:var(--c);color:var(--on-accent)}
+.pm button:disabled{box-shadow:none;border-color:var(--ink-soft)}
+.env .s{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-s),var(--glow-s)}
+.env .s:active:not(:disabled){box-shadow:var(--glow-s)}
+.env .s.plus{--c:var(--warn);background:var(--warn);box-shadow:var(--refl-s),var(--glow)}
+.env .s:disabled,.give:disabled{box-shadow:none;border-color:var(--ink-soft)}
+.give{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-s),var(--glow)}
+.give.t0{--c:var(--a);background:var(--a)}.give.t1{--c:var(--b);background:var(--b)}
+.give:disabled{background:var(--glass);color:var(--muted)}
+.give:active:not(:disabled){box-shadow:var(--glow)}
+.env .num{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow)}
+.env .num b{color:var(--hot);text-shadow:var(--tx)}
+.env .num:active{box-shadow:var(--glow)}
+.pill{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-m),var(--glow)}
+.pill:active{box-shadow:var(--glow)}
+.ordago{--c:var(--warn);background:var(--warn);color:#14110f;box-shadow:var(--refl-m),var(--glow),0 0 0 1px var(--warn)}
+.hrow b{border:0;box-shadow:var(--glow-s)}
+.owin{background:var(--glass)}
+.ol.on,.owin.on,.oby.on{box-shadow:var(--refl-m),var(--glow)}
+.ol.on{--c:var(--warn)}
+
+/* liga */
+.card{background:var(--glass);border:2.5px solid color-mix(in srgb,var(--tube) 62%,transparent);--c:var(--a);box-shadow:var(--refl-m),var(--glow-s)}
+.card:nth-of-type(even){--c:var(--b)}
+.card h3{--c:var(--accent);font-family:var(--sign);font-weight:400;border:2px solid var(--tube);box-shadow:var(--refl),var(--glow)}
+.card:nth-of-type(even) h3{--c:var(--b);background:var(--b)}
+.lg h2{font-family:var(--sign);font-weight:400;color:var(--hot);text-shadow:var(--tx)}
+.status i{border:0;box-shadow:0 0 8px var(--ok)}
+.codebox{background:color-mix(in srgb,var(--bg) 55%,transparent);border:2.5px dashed var(--tube)}
+.tr.th+.pl .pos{border:2px solid var(--tube);box-shadow:var(--glow-s)}
+.tr .g{border:0;box-shadow:var(--glow-s)}
+.match b.w{background:linear-gradient(transparent 56%,color-mix(in srgb,var(--accent) 55%,transparent) 56%)}
+.chip{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.chip.t0{--c:var(--a);background:var(--a);box-shadow:var(--refl),var(--glow)}.chip.t1{--c:var(--b);background:var(--b);box-shadow:var(--refl),var(--glow)}
+.pairname{border:2.5px solid var(--tube);box-shadow:var(--glow-s)}
+.pairname b{color:var(--hot);text-shadow:var(--tx)}
+.tcard{border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.tcard:active{box-shadow:var(--glow-s)}
+.tcard b{color:var(--hot);text-shadow:var(--tx)}
+.slot{border:2.5px solid var(--tube);box-shadow:var(--glow-s)}
+.slot.act{box-shadow:var(--refl-m),var(--glow);transform:translate(-2px,-2px) rotate(-1deg)}
+.slot.act b{color:var(--on-accent);text-shadow:none}
+.qp{background:var(--glass);border:2px solid var(--tube);box-shadow:var(--refl-s),var(--glow-s)}
+.qp:active{box-shadow:none}
+.qp.on{background:var(--accent);--c:var(--accent);box-shadow:var(--refl-s),var(--glow)}
+.search{background:var(--glass);border:2.5px solid var(--tube)}
+.pc{background:var(--glass);border:2px solid var(--tube);box-shadow:var(--refl-s),var(--glow-s)}
+.pc:active{box-shadow:none}
+.pc.t0{--c:var(--a);background:var(--a);box-shadow:var(--refl-s),var(--glow)}.pc.t1{--c:var(--b);background:var(--b);box-shadow:var(--refl-s),var(--glow)}
+.prow i{border:2px solid var(--tube)}.prow.on i{box-shadow:var(--glow-s)}
+.dot{border:0;box-shadow:0 0 6px var(--ok)}.dot.l{box-shadow:0 0 6px var(--danger)}
+.sk{border:0;box-shadow:var(--glow-s)}.sk.l{box-shadow:0 0 6px var(--danger)}
+.aw .av{border:0;box-shadow:0 0 8px color-mix(in srgb,var(--warn) 55%,transparent)}
+.tg{border:0;box-shadow:0 0 8px color-mix(in srgb,var(--warn) 55%,transparent)}
+.ch circle.ca,.ch circle.cb{stroke:var(--bg);stroke-width:2}
+.ch .ca,.ch .cb{filter:drop-shadow(0 0 3px currentColor)}
+.ch .ca{color:var(--a)}.ch .cb{color:var(--b)}
+.lgd .la,.lgd .lb{border:0;box-shadow:var(--glow-s)}
+.fc{background:color-mix(in srgb,var(--surface2) var(--ga),transparent);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.fc .fp .a,.fc .fp .b{border:2px solid var(--tube);box-shadow:var(--glow-s)}
+.fc .fgb{border:2px solid var(--tube)}.fc .fgb i{border-right:2px solid var(--bg);box-shadow:0 0 8px var(--a)}
+
+/* filtros fijos */
+.fbar{background:color-mix(in srgb,var(--bg) 88%,transparent)}
+.fbtn{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.fbtn:active{box-shadow:none}
+.fbtn.on{--c:var(--accent);background:var(--accent);box-shadow:var(--refl),var(--glow)}
+.fx{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow-s)}
+.fx:active{box-shadow:none}
+.fpanel{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-m),var(--glow-s)}
+
+/* ajustes */
+.set{background:var(--glass);border:2.5px solid var(--tube);box-shadow:var(--refl-m),var(--glow-s)}
+button.set:active{box-shadow:none}
+.sw{background:var(--surface2);border:2.5px solid var(--tube)}
+.sw::after{background:var(--hot);border:0;box-shadow:0 0 8px var(--tube)}
+.sw.on{--c:var(--ok);background:color-mix(in srgb,var(--ok) 30%,var(--surface2));box-shadow:var(--glow)}
+.seg{background:var(--glass);border:2.5px solid var(--tube)}
+.seg button.on{--c:var(--accent);background:var(--accent);box-shadow:var(--glow)}
+
+/* hojas y diálogos */
+.sheet{background:color-mix(in srgb,var(--surface) var(--gsh),transparent);border:2.5px solid var(--tube);border-bottom:0;--c:var(--accent);
+  box-shadow:0 -4px 22px color-mix(in srgb,var(--tube) var(--gs),transparent),inset 0 4px 0 var(--accent)}
+.sheet h2{font-family:var(--sign);font-weight:400;color:var(--hot);text-shadow:var(--tx)}
+.field input,.pin input{background:color-mix(in srgb,var(--bg) 45%,transparent);border:2.5px solid var(--tube)}
+.field input:focus,.pin input:focus,.search:focus{outline:0;box-shadow:var(--glow)}
+.win .big{font-family:var(--sign);-webkit-text-stroke:0;text-shadow:0 0 8px currentColor,0 0 22px color-mix(in srgb,currentColor 55%,transparent),4px 4px 0 color-mix(in srgb,currentColor 28%,transparent)}
+.win .res span{-webkit-text-stroke:0;text-shadow:0 0 8px currentColor,3px 3px 0 color-mix(in srgb,currentColor 28%,transparent)}
+.win .res span.t0{--c:var(--a);color:var(--hot)}.win .res span.t1{--c:var(--b);color:var(--hot)}
+#toast{--c:var(--warn);background:var(--warn);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow)}
+@keyframes buzz{0%,92%,100%{opacity:1}93%{opacity:.82}94%{opacity:1}96%{opacity:.88}}
+@keyframes flick{0%,18%,22%,62%,100%{opacity:1}20%,60%{opacity:.35}21%{opacity:.9}61%{opacity:.5}}
 </style>
 </head>
 <body>
@@ -922,7 +1098,7 @@ function vModal(){
     <h3 class="ptitle">Color rápido <small>pinta todo de golpe</small></h3>
     <div class="swatches">${COLORS.map(x=>`<button class="swatch ${cur===x?'on':''}" style="background:${x}" data-a="setColor" data-p="${x}" aria-label="Color ${x}"></button>`).join('')}</div>
     <label class="picker"><input type="color" data-color="1" value="${cur||COLORS[0]}"><span>Elegir cualquier color</span></label>
-    <h3 class="ptitle">Todos los colores <small>toca una pegatina</small></h3>
+    <h3 class="ptitle">Todos los colores <small>toca un tubo de neón</small></h3>
     <div class="paints">${PAINT.map(([k,n,d])=>`<label class="paint ${cu[k]?'set':''}"><input type="color" data-tok="${k}" value="${tokHex(k)}" aria-label="${n}">
       <span><b>${n}</b><small>${d}</small></span>${cu[k]?`<button class="ic rs" data-a="resetTok" data-p="${k}" aria-label="Quitar ${n}">↺</button>`:''}</label>`).join('')}</div>
     <div class="row"><button class="btn ghost" data-a="resetPaint">Restablecer todo</button><button class="btn primary" data-a="close">Listo</button></div>`;
@@ -1147,10 +1323,10 @@ function toHS(hex){
 }
 const isDark=()=>S.settings.theme==='dark'||(S.settings.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);
 // Colores que se pueden pintar uno a uno desde el pincel: [variable, nombre, para qué sirve]
-const PAINT=[['--bg','Fondo','detrás de todo'],['--surface','Tarjetas','cajas y diálogos'],['--surface2','Tarjetas 2','botones y fichas'],
-  ['--line','Tinta','bordes y sombras'],['--text','Texto','letras'],['--muted','Texto suave','ayudas y fechas'],
-  ['--accent','Acento','botones principales'],['--on-accent','Sobre acento','letra de esos botones'],
-  ['--a','Equipo 1','pareja de la izquierda'],['--b','Equipo 2','pareja de la derecha'],
+const PAINT=[['--bg','Fondo','detrás de todo'],['--surface','Cristal','tinte de cajas y diálogos'],['--surface2','Cristal 2','tinte de fichas y ajustes'],
+  ['--line','Tubo neutro','bordes sin color y reflejos'],['--text','Texto','letras'],['--muted','Texto suave','ayudas y fechas'],
+  ['--accent','Neón principal','botones y títulos'],['--on-accent','Sobre neón','letra sobre tubos rellenos'],
+  ['--a','Neón equipo 1','pareja de la izquierda'],['--b','Neón equipo 2','pareja de la derecha'],
   ['--ok','Bien','victorias y en línea'],['--danger','Peligro','borrar y errores'],['--warn','Aviso','órdago y avisos']];
 // Retoques del usuario por modo: S.settings.custom = {dark:{'--bg':'#…'}, light:{…}}
 const customOf=()=>{const c=S.settings.custom||{};return c[isDark()?'dark':'light']||{}};
@@ -1173,19 +1349,19 @@ function paint(){
 // Paleta generada a partir de un solo color (color rápido)
 function basePaint(st,hex){
   if(!/^#[0-9a-f]{6}$/i.test(hex||''))return;
-  // Receta neobrutalista: tinta (--line) casi negra en claro y crema en oscuro; colores de equipo planos y vivos
-  const[h,s0]=toHS(hex),gray=s0<8,s=gray?0:Math.max(70,Math.min(100,s0)),hb=(h+150)%360;
+  // Receta neón: en oscuro, fondo casi negro teñido y tubos muy vivos; en claro, vidrio pálido y tubos más hondos
+  const[h,s0]=toHS(hex),gray=s0<8,s=gray?0:Math.max(75,Math.min(100,s0)),hb=(h+150)%360;
   const c=(H,S_,L,a)=>`hsl(${H} ${S_}% ${L}%${a==null?'':' / '+a})`;
   const v=isDark()
-    ?{'--bg':c(h,gray?0:35,10),'--surface':c(h,gray?0:28,16),'--surface2':c(h,gray?0:25,24),'--line':c(h,gray?0:35,90),
-      '--text':c(h,gray?0:35,90),'--muted':c(h,gray?0:15,70),'--accent':c(h,s,72),'--on-accent':c(h,gray?0:40,8),
-      '--b':c(hb,gray?0:s,70),'--a-soft':c(h,s,72,.22),'--b-soft':c(hb,gray?0:s,70,.22),
-      '--shadow':'5px 5px 0 var(--line)'}
-    :{'--bg':c(h,gray?0:90,91),'--surface':'#fff','--surface2':c(h,gray?0:85,80),'--line':c(h,gray?0:30,8),
-      '--text':c(h,gray?0:30,8),'--muted':c(h,gray?0:20,30),'--accent':c(h,s,66),'--on-accent':c(h,gray?0:30,8),
-      '--b':c(hb,gray?0:s,64),'--a-soft':c(h,s,66,.25),'--b-soft':c(hb,gray?0:s,64,.25),
-      '--shadow':'5px 5px 0 var(--line)'};
-  v['--a']=v['--accent'];v['--ok']=isDark()?'#4be39a':'#12a35f';
+    ?{'--bg':c(h,gray?0:45,6),'--surface':c(h,gray?0:35,13),'--surface2':c(h,gray?0:32,20),'--line':c(h,gray?0:40,92),
+      '--text':c(h,gray?0:40,94),'--muted':c(h,gray?0:18,72),'--accent':c(h,s,64),'--on-accent':c(h,gray?0:45,7),
+      '--b':c(hb,gray?0:s,62),'--a-soft':c(h,s,64,.2),'--b-soft':c(hb,gray?0:s,62,.18),
+      '--shadow':'4px 4px 0 color-mix(in srgb,var(--line) 12%,transparent)'}
+    :{'--bg':c(h,gray?0:40,92),'--surface':'#fff','--surface2':c(h,gray?0:40,86),'--line':c(h,gray?0:45,14),
+      '--text':c(h,gray?0:45,14),'--muted':c(h,gray?0:20,34),'--accent':c(h,s,40),'--on-accent':'#fff',
+      '--b':c(hb,gray?0:s,34),'--a-soft':c(h,s,40,.18),'--b-soft':c(hb,gray?0:s,34,.18),
+      '--shadow':'4px 4px 0 color-mix(in srgb,var(--line) 16%,transparent)'};
+  v['--a']=v['--accent'];v['--ok']=isDark()?'#3dff8f':'#0a8a4c';
   for(const k in v)st.setProperty(k,v[k]);
 }
 Object.assign(A,{
@@ -1308,7 +1484,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261118160450';
+const BUILD='20261118163305';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
