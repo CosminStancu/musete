@@ -12,6 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Musete">
+<script>(function(){var d=document.documentElement;function f(){d.style.setProperty('--vw',innerWidth+'px');d.style.setProperty('--vh',innerHeight+'px')}f();addEventListener('resize',f);addEventListener('orientationchange',function(){setTimeout(f,300)})})()</script>
 <title>Musete</title>
 <!-- Tipografías: Tilt Neon (rótulos de neón), Lilita One (marcador), Nunito (interfaz), Rubik (tablas y cifras) -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,14 +79,15 @@ input{font:inherit;color:inherit;-webkit-user-select:text;user-select:text}
 svg{display:block}
 /* La partida es siempre horizontal: si la pantalla está de pie, se gira la interfaz 90°.
    Inicio, liga y ajustes siguen la orientación del móvil. */
-:root{--W:100vw;--H:100dvh}
+:root{--W:var(--vw,100vw);--H:var(--vh,100dvh);--st:env(safe-area-inset-top,0px);--sr:env(safe-area-inset-right,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px)}
 #root{position:fixed;top:0;left:0;width:var(--W);height:var(--H);overflow:hidden}
 @media (orientation:portrait){
-  :root[data-v=mus]{--W:100dvh;--H:100vw}
+  :root[data-v=mus]{--W:var(--vh,100dvh);--H:var(--vw,100vw);/* girada 90°: la isla (arriba) queda a la izquierda y la barra de inicio (abajo) a la derecha */
+    --st:env(safe-area-inset-right,0px);--sr:env(safe-area-inset-bottom,0px);--sb:env(safe-area-inset-left,0px);--sl:env(safe-area-inset-top,0px)}
   :root[data-v=mus] #root{transform-origin:top left;transform:rotate(90deg) translateY(-100%)}
 }
 #app{max-width:1100px;margin:0 auto;height:100%;overflow-y:auto;display:flex;flex-direction:column;
-  padding:env(safe-area-inset-top) max(14px,env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+  padding:var(--st) max(14px,var(--sr)) calc(18px + var(--sb)) max(14px,var(--sl))}
 
 /* barra superior: botones cuadrados tipo pegatina */
 .bar{display:flex;align-items:center;gap:10px;height:64px;flex:none;position:relative}
@@ -326,7 +328,7 @@ button.score:active{transform:translate(6px,6px);box-shadow:0 0 0 var(--line)}
 /* filtros de "Todas las partidas": fijos arriba junto a la barra */
 /* #app deja arriba el hueco de la barra de estado (safe-area); la barra fija sube hasta el borde
    y rellena ese hueco con fondo, para que la lista no se vea por detrás de la hora y los iconos */
-.fbar{--sat:env(safe-area-inset-top,0px);position:sticky;top:calc(-1*var(--sat));margin-top:calc(-1*var(--sat));padding-top:var(--sat);
+.fbar{--sat:var(--st);position:sticky;top:calc(-1*var(--sat));margin-top:calc(-1*var(--sat));padding-top:var(--sat);
   z-index:3;background:var(--bg);padding-bottom:10px;margin-bottom:8px}
 .frow{display:flex;gap:10px;align-items:center}
 .fbtn{flex:1;min-width:0;height:46px;padding:0 14px;border-radius:99px;font-size:15px;font-weight:900;color:var(--text);background:var(--surface);
@@ -372,7 +374,7 @@ button.set:active{transform:translate(4px,4px);box-shadow:none}
 /* hojas / diálogos */
 .overlay{position:absolute;inset:0;background:rgba(20,17,15,.62);display:flex;align-items:flex-end;justify-content:center;z-index:10;animation:fade .15s}
 .sheet{background:var(--surface);width:100%;max-width:520px;max-height:calc(var(--H)*.96);overflow:auto;border:3px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;
-  padding:22px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:inset 0 9px 0 var(--accent);animation:up .4s var(--pop)}
+  padding:22px 18px calc(18px + var(--sb));box-shadow:inset 0 9px 0 var(--accent);animation:up .4s var(--pop)}
 .sheet h2{margin:0 0 4px;font:400 28px var(--display);letter-spacing:.01em}
 .sheet p{margin:0 0 14px;color:var(--muted)}
 .sheet .row{margin-top:16px}
@@ -389,7 +391,7 @@ button.set:active{transform:translate(4px,4px);box-shadow:none}
 .win .res{font:400 64px/1 var(--display);font-variant-numeric:tabular-nums;margin:10px 0 4px}
 .win .res span{-webkit-text-stroke:2.5px var(--line);paint-order:stroke fill;text-shadow:3px 3px 0 var(--line)}
 .win .res span.t0{color:var(--a)}.win .res span.t1{color:var(--b)}
-#toast{position:absolute;left:50%;top:calc(8px + env(safe-area-inset-top));transform:translate(-50%,-30px) rotate(-1deg);background:var(--warn);color:#14110f;
+#toast{position:absolute;left:50%;top:calc(8px + var(--st));transform:translate(-50%,-30px) rotate(-1deg);background:var(--warn);color:#14110f;
   border:3px solid var(--line);box-shadow:4px 4px 0 var(--line);padding:8px 18px;border-radius:99px;font-weight:900;font-size:14px;opacity:0;pointer-events:none;
   transition:transform .3s var(--pop),opacity .2s;z-index:20;max-width:90%;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0) rotate(-1deg)}
@@ -404,7 +406,7 @@ button.set:active{transform:translate(4px,4px);box-shadow:none}
   .bar{height:52px}
   /* mus: equipo 1 | envites | equipo 2; abajo deshacer | historial | órdago. Sin scroll */
   #app.v-mus{display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto minmax(0,1fr) auto;column-gap:10px;height:100%;min-height:0;
-    padding-bottom:calc(12px + env(safe-area-inset-bottom));padding-right:max(16px,env(safe-area-inset-right));padding-left:max(10px,env(safe-area-inset-left))}
+    padding-bottom:calc(12px + var(--sb));padding-right:max(16px,var(--sr));padding-left:max(10px,var(--sl))}
   .v-mus .bar{grid-column:1/-1;height:54px}
   .v-mus .teams{display:contents}
   .v-mus .team{grid-row:2}
@@ -1484,7 +1486,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261118163405';
+const BUILD='20261119114943';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
