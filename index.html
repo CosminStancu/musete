@@ -17,7 +17,7 @@
 <!-- Tipografías: Tilt Neon (rótulos de neón), Lilita One (marcador), Nunito (interfaz), Rubik (tablas y cifras) -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Tilt+Neon&family=Nunito:wght@600;700;800;900&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
-<style>
+<style id="sk-neon">
 /* ───────── Q4 · Neón de bar ─────────
    Cristal oscuro ahumado (vitrina de bar de noche) y los colores de las pegatinas convertidos en luz:
    los bordes gordos pasan a ser tubos de neón (borde + resplandor), la sombra dura queda como reflejo
@@ -595,6 +595,416 @@ button.set:active{box-shadow:none}
 @keyframes buzz{0%,92%,100%{opacity:1}93%{opacity:.82}94%{opacity:1}96%{opacity:.88}}
 @keyframes flick{0%,18%,22%,62%,100%{opacity:1}20%,60%{opacity:.35}21%{opacity:.9}61%{opacity:.5}}
 </style>
+<style id="sk-glass" media="not all">/* ───────── Original cristal ───────── */
+:root{
+  --bg:#111612;--surface:#1a1f1a;--surface2:#2a2f2a;--line:#414941;
+  --text:#e2e3dd;--muted:#8b938a;--accent:#94d5a2;--on-accent:#00391a;
+  --a:#94d5a2;--a-soft:rgba(148,213,162,.14);--b:#a2ced9;--b-soft:rgba(162,206,217,.14);
+  --danger:#ffb4ab;--ok:#94d5a2;--shadow:0 10px 30px rgba(0,0,0,.5);
+  --ui:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --display:var(--ui);
+}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#f6fbf3;--surface:#ffffff;--surface2:#e4eae1;--line:#c1c9be;
+  --text:#181d18;--muted:#5d655c;--accent:#2a6a3f;--on-accent:#fff;
+  --a:#2a6a3f;--a-soft:rgba(42,106,63,.12);--b:#3a656f;--b-soft:rgba(58,101,111,.12);
+  --danger:#ba1a1a;--ok:#2a6a3f;--shadow:0 10px 30px rgba(20,40,25,.16);
+}}
+:root[data-theme=light]{
+  --bg:#f6fbf3;--surface:#ffffff;--surface2:#e4eae1;--line:#c1c9be;
+  --text:#181d18;--muted:#5d655c;--accent:#2a6a3f;--on-accent:#fff;
+  --a:#2a6a3f;--a-soft:rgba(42,106,63,.12);--b:#3a656f;--b-soft:rgba(58,101,111,.12);
+  --danger:#ba1a1a;--ok:#2a6a3f;--shadow:0 10px 30px rgba(20,40,25,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:16px/1.4 var(--ui);
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.3;cursor:default}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input{font:inherit;color:inherit;-webkit-user-select:text;user-select:text}
+svg{display:block}
+/* La partida es siempre horizontal: si la pantalla está de pie, se gira la interfaz 90°.
+   Inicio, liga y ajustes siguen la orientación del móvil. */
+:root{--W:var(--vw,100vw);--H:var(--vh,100dvh);--st:env(safe-area-inset-top,0px);--sr:env(safe-area-inset-right,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px)}
+#root{position:fixed;top:0;left:0;width:var(--W);height:var(--H);overflow:hidden}
+@media (orientation:portrait){
+  :root[data-v=mus]{--W:var(--vh,100dvh);--H:var(--vw,100vw);--st:env(safe-area-inset-right,0px);--sr:env(safe-area-inset-bottom,0px);--sb:env(safe-area-inset-left,0px);--sl:env(safe-area-inset-top,0px)}
+  :root[data-v=mus] #root{transform-origin:top left;transform:rotate(90deg) translateY(-100%)}
+}
+#app{max-width:1100px;margin:0 auto;height:100%;overflow-y:auto;display:flex;flex-direction:column;
+  padding:var(--st) max(12px,var(--sr)) calc(12px + var(--sb)) max(12px,var(--sl))}
+
+/* barra superior */
+.bar{display:flex;align-items:center;gap:4px;height:56px;flex:none}
+.bar h1{flex:1;margin:0;font:700 20px var(--display);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{position:relative}
+.ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ic:active{background:var(--surface2)}
+.ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.spin svg{animation:spin 1s linear infinite}
+
+/* botones */
+.btn{min-height:48px;padding:0 16px;border-radius:14px;background:var(--surface2);font-weight:600;
+  display:inline-grid;place-items:center;transition:transform .08s}
+.btn:active:not(:disabled){transform:scale(.96)}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.danger{color:var(--danger)}
+.btn.block{width:100%}
+.row{display:flex;gap:8px}.row>*{flex:1}
+
+/* inicio */
+.cdot{width:22px;height:22px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--line)}
+.hint{color:var(--muted);font-size:14px;margin:-4px 0 14px}
+.swatches{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:14px}
+.swatch{aspect-ratio:1;border-radius:50%;max-width:48px;width:100%;justify-self:center}
+.swatch.on{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--text)}
+.picker{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--surface2);cursor:pointer}
+.picker input{width:44px;height:36px;border:0;padding:0;background:none;border-radius:8px;cursor:pointer}
+.picker span{font-weight:500}
+.hero{padding:20px 4px 18px}
+.hero .logo{font:700 44px/1 var(--display);letter-spacing:-.01em}
+.hero .logo i{color:var(--accent);font-style:normal}
+.hero p{margin:6px 0 0;color:var(--muted)}
+.game{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px}
+.game h2{margin:0;font:700 22px var(--display)}
+.game p{margin:2px 0 14px;color:var(--muted);font-size:14px}
+.game .saved{font-size:13px;color:var(--accent);margin:-8px 0 12px}
+
+/* mus (plano, sin tarjetas) */
+.mid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:14px;white-space:nowrap}
+.mid h1{flex:none;font:400 22px var(--ui)}
+.tally{display:flex;align-items:baseline;gap:6px;padding:1px 12px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--line);font-variant-numeric:tabular-nums}
+.tally small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.tally b{font:500 19px var(--ui)}
+.tally i{font-style:normal;color:var(--muted)}
+.team{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0}
+.tname{font-size:clamp(20px,calc(var(--H)*.075),30px);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bon{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
+.bon button{height:34px;padding:0 11px;border-radius:99px;font-size:13px;font-weight:500;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+.bon button:active{background:var(--surface2);color:var(--text)}
+.bon .brk{flex-basis:100%;height:0}
+button.score{font:400 clamp(56px,calc(var(--H)*.22),128px)/1.05 var(--ui);font-variant-numeric:tabular-nums;min-width:1.7em;padding:0 .12em;border-radius:24px}
+button.score:active{background:var(--surface2)}
+.pm{display:flex;gap:clamp(18px,calc(var(--W)*.05),52px)}
+.pm button,.env .s{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;flex:none}
+.pm button:active:not(:disabled),.env .s:active:not(:disabled){background:var(--surface2)}
+.pm svg,.env svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.pm svg{width:40px;height:40px;stroke-width:1.8}
+.pm .minus{color:var(--muted)}.plus{color:var(--accent)}
+.envs{display:flex;flex-direction:column;justify-content:center;min-height:0}
+.env{flex:1;max-height:72px;min-height:46px;display:flex;align-items:center;justify-content:center;gap:clamp(4px,calc(var(--W)*.018),18px)}
+.env .s{width:44px;height:44px}
+.env .s svg{width:26px;height:26px;stroke-width:1.8}
+.env .s.minus{color:var(--accent);opacity:.65}
+.env .s.minus:disabled{opacity:.3}
+.give{width:48px;height:48px;border-radius:50%;background:var(--surface2);color:var(--text);display:grid;place-items:center;flex:none}
+.give:disabled{opacity:1;color:var(--muted)}
+.give:active:not(:disabled){background:var(--line)}
+.give svg{width:24px;height:24px;stroke-width:2}
+.env .num{min-width:54px;height:48px;border-radius:14px;font:400 28px var(--ui);font-variant-numeric:tabular-nums}
+.env .num:active{background:var(--surface2)}
+.pill{min-height:44px;padding:0 22px;border-radius:99px;box-shadow:inset 0 0 0 1.5px var(--line);font-weight:500}
+.pill:active{background:var(--surface2)}
+.ordago{color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--muted)}
+.histB{color:var(--muted)}
+.undoB{color:var(--muted)}.undoB svg{width:28px;height:28px}
+.hrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 44px 56px;gap:8px;align-items:center;min-height:44px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.hrow .hw{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrow .hd{color:var(--muted);font-size:14px}
+.hrow b{text-align:right;color:var(--accent);font-weight:600}
+.hrow .hs{text-align:right;color:var(--muted);font-size:13px}
+/* modo mesa: 'swp' cambia de lado las parejas (solo dibujo) */
+.v-mus .team.t0.swp{grid-column:3}.v-mus .team.t1.swp{grid-column:1}
+.olab{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:8px 0 4px}
+.ochips,.orow{display:grid;gap:6px}.ochips{grid-template-columns:repeat(4,1fr)}.orow{grid-template-columns:repeat(3,1fr)}
+.ol{padding:0 4px}.ol.on{background:var(--accent);color:var(--on-accent)}
+.orow .btn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px;display:block}
+
+/* liga */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px 14px;margin-bottom:12px}
+.card h3{margin:0 0 4px}
+.lg h2{margin:0;font:700 26px var(--display)}
+.status{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:2px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.status.off i{background:var(--danger)}
+.codebox{display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 8px 8px 14px;border-radius:14px;background:var(--bg);border:1.5px dashed var(--line)}
+.codebox div{flex:1;min-width:0}
+.codebox small{display:block;font-size:12px;color:var(--muted)}
+.codebox b{font:700 22px ui-monospace,Consolas,monospace;letter-spacing:.14em;-webkit-user-select:text;user-select:text}
+.tr{display:grid;grid-template-columns:20px 1fr 30px 30px 30px 44px;gap:4px;align-items:center;min-height:46px;width:100%;
+  text-align:right;font-variant-numeric:tabular-nums;border-top:1px solid var(--line)}
+.tr.th{min-height:26px;font-size:12px;color:var(--muted);border-top:0}
+.tr .pos{text-align:left;color:var(--muted)}
+.tr .nm{text-align:left;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr .nm small{display:block;font-weight:400;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.tr .g{color:var(--accent);font-weight:700}
+.match{display:flex;align-items:center;gap:8px;min-height:48px;border-top:1px solid var(--line)}
+.match .d{width:46px;flex:none;font-size:12px;color:var(--muted)}
+.match .mt{flex:1;min-width:0;font-size:14px;font-variant-numeric:tabular-nums}
+.match .mt small{display:block;font-size:12px;color:var(--danger)}
+.match b{font-weight:500}.match b.w{font-weight:700;color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{min-height:44px;padding:0 16px;border-radius:99px;font-weight:600;box-shadow:inset 0 0 0 1.5px var(--line)}
+.chip.t0{background:var(--a);color:var(--bg);box-shadow:none}.chip.t1{background:var(--b);color:var(--bg);box-shadow:none}
+.pairname{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 6px 8px 14px;border-radius:14px;margin-bottom:8px;background:var(--a-soft);--c:var(--a)}
+.pairname.t1{background:var(--b-soft);--c:var(--b)}
+.pairname b{font:700 22px var(--display);color:var(--c)}
+.pairname small{display:block;font-size:13px;color:var(--muted)}
+.tcard{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:76px;padding:10px 6px 10px 14px;border-radius:14px;
+  margin-bottom:8px;background:var(--soft);border-left:4px solid var(--c);cursor:pointer}
+.tcard.t0{--c:var(--a);--soft:var(--a-soft)}.tcard.t1{--c:var(--b);--soft:var(--b-soft)}
+.tcard>div{min-width:0}
+.tcard small{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.tcard b{display:block;font:700 22px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tcard b.empty{font:600 17px var(--ui)}
+.tcard span:not(.ic){display:block;font-size:13px;color:var(--muted)}
+.tcard:active{filter:brightness(1.15)}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.slot{display:flex;align-items:center;gap:2px;min-height:60px;padding:6px 4px 6px 12px;border-radius:14px;background:var(--soft);border-left:4px solid var(--c);min-width:0}
+.slot.t0{--c:var(--a);--soft:var(--a-soft)}.slot.t1{--c:var(--b);--soft:var(--b-soft)}
+.slot.act{box-shadow:inset 0 0 0 1.5px var(--c)}
+.slot>div{flex:1;min-width:0}
+.slot small{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.slot b{display:block;font:700 19px var(--ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot b.empty{font-weight:500;font-size:16px;color:var(--muted)}
+.slot span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot .ic{width:36px;height:36px}
+.quick{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:4px;scrollbar-width:none}
+.quick::-webkit-scrollbar{display:none}
+.qp{flex:none;height:36px;padding:0 12px;border-radius:99px;font-size:13px;color:var(--muted);white-space:nowrap;box-shadow:inset 0 0 0 1px var(--line)}
+.qp:active{background:var(--surface2)}
+.search{width:100%;height:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);padding:0 12px;margin-bottom:8px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:6px}
+.pc{height:44px;padding:0 8px;border-radius:12px;background:var(--surface2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc.t0{background:var(--a);color:var(--bg)}.pc.t1{background:var(--b);color:var(--bg)}
+.pc i{font-style:normal;font-size:11px;margin-left:6px;opacity:.75}
+.sheet.wide{max-width:760px}
+.ogrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ocol{display:flex;flex-direction:column;gap:6px;min-width:0;--c:var(--a)}.ocol.t1{--c:var(--b)}
+.ocol small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.ocol .btn{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.owin{box-shadow:inset 0 0 0 1.5px var(--c);background:transparent;color:var(--c)}
+.owin.on,.oby.on{background:var(--c);color:var(--bg);box-shadow:none}
+.oby{min-height:42px}
+.og{font-style:normal;font-size:12px;color:var(--muted);margin-left:6px}
+.plist{margin:0 -4px;--c:var(--a)}.plist.t1{--c:var(--b)}
+.prow{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:54px;padding:0 10px;border-top:1px solid var(--line);font-weight:600;text-align:left}
+.prow i{width:26px;height:26px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--line);display:grid;place-items:center;font-style:normal;font-size:15px;color:var(--bg)}
+.prow.on{color:var(--c)}
+.prow.on i{background:var(--c);box-shadow:none}.prow.on i::after{content:"✓"}
+.hint,.sheet p.hint{color:var(--muted);font-size:14px;margin:8px 0}
+.pl{cursor:pointer}.pl:active{background:var(--surface2)}
+.fm{display:inline-flex;gap:3px;align-items:center;vertical-align:middle;margin-right:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.dot.l{background:transparent;box-shadow:inset 0 0 0 2px var(--danger)}
+.sk{font-weight:600;font-size:12px;color:var(--ok)}.sk.l{color:var(--danger)}
+.rec{font-size:13px;color:var(--muted);margin:8px 0 0}
+.kv{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.kv span{color:var(--muted);flex:none}.kv b{font-weight:600;text-align:right;min-width:0}
+.aw{padding:8px 0;border-top:1px solid var(--line)}
+.aw .ah{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.an{font-weight:700;text-align:left;min-height:36px}.an i{font-style:normal;color:var(--muted);font-size:13px;margin-left:4px}
+.aw .av{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:600;font-size:14px;white-space:nowrap}
+.aw .ar{font-size:12px;color:var(--muted)}.aw .ao{font-size:14px;font-weight:600;margin-top:2px}
+.tg{display:inline-block;font-style:normal;font-size:11px;font-weight:600;padding:0 6px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--line);color:var(--muted);margin-left:6px;white-space:nowrap}
+.match{cursor:pointer}
+.more{margin-top:10px}
+/* filtros de "Todas las partidas": fijos arriba junto a la barra */
+/* #app deja arriba el hueco de la barra de estado (safe-area); la barra fija sube hasta el borde
+   y rellena ese hueco con fondo, para que la lista no se vea por detrás de la hora y los iconos */
+.fbar{--sat:var(--st);position:sticky;top:calc(-1*var(--sat));margin-top:calc(-1*var(--sat));padding-top:var(--sat);
+  z-index:3;background:var(--bg);padding-bottom:8px;margin-bottom:4px}
+.frow{display:flex;gap:8px;align-items:center}
+.fbtn{flex:1;min-width:0;height:40px;padding:0 12px;border-radius:99px;font-size:14px;font-weight:500;color:var(--text);
+  box-shadow:inset 0 0 0 1px var(--line);display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbtn i{font-style:normal;font-size:11px;color:var(--muted);transition:transform .15s}
+.fbtn.open i{transform:rotate(180deg)}
+.fbtn.on{background:var(--accent);color:var(--on-accent);box-shadow:none}.fbtn.on i{color:inherit}
+.fx{width:40px;height:40px}
+.fpanel{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:10px;border-radius:16px;background:var(--surface);border:1px solid var(--line);max-height:42vh;overflow:auto}
+.fpanel small{width:100%;font-size:12px;color:var(--muted);margin:2px 2px 0}
+.fpanel .qp{height:34px}
+.qp.on{background:var(--accent);color:var(--on-accent);box-shadow:none}
+.mrec{margin:0 0 8px;font-size:14px;color:var(--muted)}.mrec b{color:var(--text)}
+.ch{width:100%;height:auto;margin:6px 0}.ch .gr{stroke:var(--line);stroke-width:1}.ch text{fill:var(--muted);font-size:9px}
+.ch .ca,.ch .cb{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.ch .ca{stroke:var(--a)}.ch .cb{stroke:var(--b)}.ch circle.ca{fill:var(--a);stroke:none}.ch circle.cb{fill:var(--b);stroke:none}
+.lgd{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;font-weight:600}.lgd .la{color:var(--a)}.lgd .lb{color:var(--b)}
+.fc{margin:10px 0 2px;padding:8px 10px;border-radius:14px;background:var(--bg);border:1px solid var(--line);font-size:13px}
+.fc .fh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.fc .fh small{color:var(--muted);font-size:11px}
+.fc .fp{display:flex;justify-content:space-between;font:700 20px var(--display);font-variant-numeric:tabular-nums;margin-top:2px}
+.fc .fp .a{color:var(--a)}.fc .fp .b{color:var(--b)}
+
+.fc div.fl{color:var(--muted);margin-top:2px}.fc div.fl b{color:var(--text);font-weight:600}
+
+/* ajustes */
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px;min-height:64px;width:100%;text-align:left}
+.set small{display:block;color:var(--muted);font-size:13px}
+.sw{width:50px;height:30px;border-radius:99px;background:var(--surface2);position:relative;flex:none;transition:background .15s}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:transform .15s,background .15s}
+.sw.on{background:var(--accent)}.sw.on::after{transform:translateX(20px);background:var(--on-accent)}
+.seg{display:flex;background:var(--surface2);border-radius:12px;padding:3px;gap:2px}
+.seg button{flex:1;min-height:40px;padding:0 12px;border-radius:10px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--accent);color:var(--on-accent)}
+.note{color:var(--muted);font-size:13px;text-align:center;margin-top:18px}
+
+/* hojas / diálogos */
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:10;animation:fade .15s}
+.sheet{background:var(--surface);width:100%;max-width:520px;max-height:calc(var(--H)*.96);overflow:auto;border-radius:24px 24px 0 0;
+  padding:20px 16px calc(16px + var(--sb));box-shadow:var(--shadow);animation:up .2s cubic-bezier(.2,.8,.2,1)}
+.sheet h2{margin:0 0 4px;font:700 24px var(--display)}
+.sheet p{margin:0 0 14px;color:var(--muted)}
+.sheet .row{margin-top:14px}
+.field{display:block;margin-bottom:10px}
+.field span{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.field input,.pin input{width:100%;height:48px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);padding:0 12px}
+.pin{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.pin input{flex:1;min-width:0}
+.pin .btn{flex:none}
+.line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}
+.win{text-align:center;padding:10px 0 4px}
+.win .big{font:700 34px/1.1 var(--display);margin:6px 0}
+.win .res{font:700 56px/1 var(--display);font-variant-numeric:tabular-nums;margin:10px 0 2px}
+.win .res span.t0{color:var(--a)}.win .res span.t1{color:var(--b)}
+#toast{position:absolute;left:50%;top:calc(6px + var(--st));transform:translate(-50%,-20px);background:var(--text);color:var(--bg);
+  padding:10px 16px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90%;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* diseño horizontal (único) */
+  #app.v-settings{max-width:560px}
+  .bar{height:46px}
+  /* mus: equipo 1 | envites | equipo 2; abajo deshacer | historial | órdago. Sin scroll */
+  #app.v-mus{display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto minmax(0,1fr) auto;column-gap:8px;height:100%;min-height:0;
+    padding-bottom:calc(10px + var(--sb))}
+  .v-mus .bar{grid-column:1/-1}
+  .v-mus .teams{display:contents}
+  .v-mus .team{grid-row:2}
+  .v-mus .team.t0{grid-column:1}.v-mus .team.t1{grid-column:3}
+  .v-mus .envs{grid-column:2;grid-row:2}
+  .v-mus .undoB{grid-column:1;grid-row:3;justify-self:center}
+  .v-mus .histB{grid-column:2;grid-row:3;justify-self:center}
+  .v-mus .ordago{grid-column:3;grid-row:3;justify-self:center}
+  @media (orientation:landscape){
+  /* inicio: tarjetas lado a lado */
+  #app.v-home{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-content:start}
+  .v-home .bar{grid-column:1/-1;margin-bottom:-46px}
+  .v-home .hero{grid-column:1/-1;padding:10px 4px 12px}
+  .v-home .hero .logo{font-size:36px}
+  .v-home .game{margin:0;display:flex;flex-direction:column}
+  .v-home .game .row{margin-top:auto}
+  /* liga: tablas en dos columnas */
+  .v-liga .cols{columns:2;column-gap:12px}
+  .v-liga .cols>*{break-inside:avoid}
+  .v-liga .lg{display:flex;align-items:baseline;gap:12px;padding:8px 14px}
+  .v-liga .lg .status{margin:0}
+  }
+  .sheet{padding-top:12px}
+  .sheet p{margin-bottom:8px}
+  .sheet .hrow:first-of-type{border-top:0}
+  .tcard{min-height:58px;padding-top:5px;padding-bottom:5px}
+  .sheet .row{margin-top:8px}
+
+/* ═════════ Original cristal: el verde de siempre, con superficies de vidrio ═════════
+   Todo cuelga de las mismas variables que pinta paint(): el vidrio se tiñe con --surface/--surface2,
+   el fondo lleva dos halos con los colores de equipo (--a/--b) para que el desenfoque se note. */
+:root{--warn:#f0cf62;
+  --gal:58%;--gal2:52%;
+  --glass:color-mix(in srgb,var(--surface) var(--gal),transparent);
+  --glass2:color-mix(in srgb,var(--surface2) var(--gal2),transparent);
+  --edge:color-mix(in srgb,var(--text) 13%,transparent);
+  --shine:inset 0 1px 0 color-mix(in srgb,#fff 10%,transparent);
+  --blur:blur(18px) saturate(1.5)}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){--warn:#a87a00;--gal:66%;--gal2:62%;--shine:inset 0 1px 0 rgba(255,255,255,.75)}}
+:root[data-theme=light]{--warn:#a87a00;--gal:66%;--gal2:62%;--shine:inset 0 1px 0 rgba(255,255,255,.75)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:root:root:root{--gal:96%;--gal2:96%}}
+
+body{background:radial-gradient(70vmax 55vmax at 0% 0%,color-mix(in srgb,var(--a) 22%,transparent),transparent 70%),
+  radial-gradient(65vmax 50vmax at 100% 100%,color-mix(in srgb,var(--b) 20%,transparent),transparent 70%),var(--bg) fixed}
+
+/* piezas de vidrio (pocas y grandes: el desenfoque cuesta) */
+.game,.card,.set,.sheet,.fpanel{background:var(--glass);border:1px solid var(--edge);box-shadow:var(--shine),0 8px 28px rgba(0,0,0,.18);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.game{border-radius:28px;padding:18px}
+.card{border-radius:24px}
+.set{border-radius:20px}
+.fc,.codebox{background:var(--glass2);border:1px solid var(--edge);box-shadow:var(--shine)}
+.codebox{border-style:dashed}
+.search,.field input,.pin input{background:var(--glass2);border:1px solid var(--edge);box-shadow:var(--shine)}
+
+/* botones: vidrio claro; el principal, color sólido con brillo */
+.btn{background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
+.btn.primary{background:var(--accent);color:var(--on-accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 18px color-mix(in srgb,var(--accent) 35%,transparent)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px var(--edge)}
+.ic:active{background:var(--glass2)}
+.bar .ic{background:var(--glass);border:1px solid var(--edge);box-shadow:var(--shine);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.bar .ic+.ic{margin-left:4px}
+.brushb svg{width:22px;height:22px}
+.seg{background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge)}
+.sw{background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge)}
+.chip,.qp,.fbtn,.pill,.bon button{box-shadow:var(--shine),inset 0 0 0 1px var(--edge);background:var(--glass2)}
+.chip.t0{background:var(--a)}.chip.t1{background:var(--b)}
+.qp.on,.fbtn.on{background:var(--accent);box-shadow:none}
+.pc{background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
+.pc.t0{background:var(--a)}.pc.t1{background:var(--b)}
+.tcard,.slot,.pairname{box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
+.slot.act{box-shadow:inset 0 0 0 2px var(--c)}
+.tg{color:var(--warn);box-shadow:inset 0 0 0 1px currentColor}
+.prow,.tr,.match,.kv,.aw,.hrow{border-top-color:var(--edge)}
+
+/* filtros fijos: vidrio esmerilado */
+.fbar{background:color-mix(in srgb,var(--bg) 70%,transparent);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.fbar{background:var(--bg)}}
+.fc .fgb{height:6px;border-radius:3px;background:var(--b);overflow:hidden;margin:2px 0 6px}.fc .fgb i{display:block;height:100%;background:var(--a)}
+
+/* hojas: vidrio con asa */
+.overlay{background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.overlay{background:rgba(0,0,0,.6)}}
+.sheet{border-radius:30px 30px 0 0;border-bottom:0;position:relative;padding-top:22px}
+.sheet::before{content:"";position:absolute;top:8px;left:50%;width:40px;height:5px;margin-left:-20px;border-radius:3px;background:var(--edge)}
+#toast{background:color-mix(in srgb,var(--text) 88%,transparent);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+
+/* mus: cada pareja en su panel de vidrio con su color; envites en otro */
+.v-mus .team{background:color-mix(in srgb,var(--c) 9%,var(--glass));border:1px solid color-mix(in srgb,var(--c) 30%,var(--edge));border-radius:28px;
+  box-shadow:var(--shine);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);padding:4px 6px;margin-bottom:8px}
+.team.t0{--c:var(--a)}.team.t1{--c:var(--b)}
+.tname{display:flex;align-items:center;gap:8px;color:var(--c)}
+.tname .tn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.tname .ses{flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:99px;display:grid;place-items:center;font-size:15px;
+  background:var(--glass2);color:var(--text);box-shadow:inset 0 0 0 1px var(--edge)}
+button.score{color:var(--text)}
+.pm .plus{background:var(--c);color:var(--on-accent);box-shadow:0 6px 16px color-mix(in srgb,var(--c) 35%,transparent)}
+.pm .minus{background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge)}
+.v-mus .envs{background:var(--glass);border:1px solid var(--edge);border-radius:28px;box-shadow:var(--shine);padding:2px 6px;margin-bottom:8px;
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.give{background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge)}
+.give.t0:not(:disabled){background:var(--a);color:var(--on-accent)}.give.t1:not(:disabled){background:var(--b);color:var(--on-accent)}
+.env .num{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.env .num small{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.env .num b{font:400 26px/1 var(--ui);font-variant-numeric:tabular-nums}
+.tally{background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
+.ordago{color:var(--warn);box-shadow:var(--shine),inset 0 0 0 1.5px var(--warn);background:var(--glass2)}
+.undoB{background:var(--glass2);border-radius:50%;width:48px;height:48px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--edge)}
+.undoB svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* pincel "Pinta tu Musete" */
+.ptitle{font:700 17px var(--display);margin:14px 0 8px;display:flex;align-items:baseline;gap:8px}.ptitle small{font:500 12px var(--ui);color:var(--muted)}
+.paints{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:6px}
+.paint{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:18px;background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge);cursor:pointer;min-height:56px}
+.paint.set{box-shadow:var(--shine),inset 0 0 0 1.5px var(--accent)}
+.paint input{flex:none;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;overflow:hidden;box-shadow:0 0 0 2px var(--edge)}
+.paint input::-webkit-color-swatch-wrapper{padding:0}.paint input::-webkit-color-swatch{border:0;border-radius:50%}
+.paint input::-moz-color-swatch{border:0;border-radius:50%}
+.paint span{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}.paint b{font-weight:600;font-size:14px}
+.paint small{font-size:11px;color:var(--muted)}
+.paint .rs{width:32px;height:32px;flex:none;font-size:18px}
+.picker{background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
+</style>
 </head>
 <body>
 <div id="root"><div id="app"></div><div id="modal"></div><div id="toast" role="status"></div></div>
@@ -623,7 +1033,7 @@ async function rpc(fn,args,quiet){
 const KEY='musete.v1';
 // El código de la liga es una contraseña que teclea el usuario: se guarda en S.code (localStorage) y nunca se muestra
 const newLeague=()=>({name:'Liga Musete',players:[],matches:[],pending:[],dels:[],titles:{}});
-const DEF={settings:{keepOn:true,theme:'auto',haptics:true},
+const DEF={settings:{keepOn:true,theme:'auto',haptics:true,skin:'neon'},
   musDef:{t:[[],[]]},
   code:'',league:newLeague(),mus:null};
 const ENV=['Grande','Chica','Pares','Juego'];
@@ -1083,6 +1493,7 @@ function vSettings(){
   sw('keepOn','Pantalla siempre encendida','Mientras hay una partida abierta: que no se apague en pleno órdago')+
   sw('haptics','Vibración','Al pulsar botones (un zumbidito de nada)')+
   `<div class="set"><span>Tema</span><div class="seg">${[['auto','Auto'],['light','Claro'],['dark','Oscuro']].map(([v,l])=>`<button class="${st.theme===v?'on':''}" data-a="theme" data-p="${v}">${l}</button>`).join('')}</div></div>
+  <div class="set"><span>Estilo</span><div class="seg">${[['neon','Neón'],['glass','Cristal']].map(([v,l])=>`<button class="${SKIN()===v?'on':''}" data-a="skin" data-p="${v}" aria-pressed="${SKIN()===v}">${l}</button>`).join('')}</div></div>
   <button class="set" data-a="colors"><span>Colores<small>Pinta la app a tu gusto (solo en este móvil)</small></span></button>
   <button class="set" data-a="trash"><span>Papelera<small>Partidas borradas de la liga (pide PIN)</small></span></button>
   <button class="set" data-a="logout"><span>Cerrar sesión de la liga<small>Pide de nuevo el código para entrar</small></span></button>
@@ -1098,10 +1509,10 @@ function vModal(){
     // Pincel: arriba un color base que genera toda la paleta; debajo, cada color de la app por separado
     h=`<h2>Pinta tu Musete</h2><p class="hint">Solo en este móvil. Editando el modo <b>${mode}</b> (cambia el tema en Ajustes para pintar el otro).</p>
     <h3 class="ptitle">Color rápido <small>pinta todo de golpe</small></h3>
-    <div class="swatches">${COLORS.map(x=>`<button class="swatch ${cur===x?'on':''}" style="background:${x}" data-a="setColor" data-p="${x}" aria-label="Color ${x}"></button>`).join('')}</div>
-    <label class="picker"><input type="color" data-color="1" value="${cur||COLORS[0]}"><span>Elegir cualquier color</span></label>
-    <h3 class="ptitle">Todos los colores <small>toca un tubo de neón</small></h3>
-    <div class="paints">${PAINT.map(([k,n,d])=>`<label class="paint ${cu[k]?'set':''}"><input type="color" data-tok="${k}" value="${tokHex(k)}" aria-label="${n}">
+    <div class="swatches">${colorList().map(x=>`<button class="swatch ${cur===x?'on':''}" style="background:${x}" data-a="setColor" data-p="${x}" aria-label="Color ${x}"></button>`).join('')}</div>
+    <label class="picker"><input type="color" data-color="1" value="${cur||colorList()[0]}"><span>Elegir cualquier color</span></label>
+    <h3 class="ptitle">Todos los colores <small>${SKIN()==='glass'?'toca uno para cambiarlo':'toca un tubo de neón'}</small></h3>
+    <div class="paints">${paintList().map(([k,n,d])=>`<label class="paint ${cu[k]?'set':''}"><input type="color" data-tok="${k}" value="${tokHex(k)}" aria-label="${n}">
       <span><b>${n}</b><small>${d}</small></span>${cu[k]?`<button class="ic rs" data-a="resetTok" data-p="${k}" aria-label="Quitar ${n}">↺</button>`:''}</label>`).join('')}</div>
     <div class="row"><button class="btn ghost" data-a="resetPaint">Restablecer todo</button><button class="btn primary" data-a="close">Listo</button></div>`;
   }else if(m.type==='musSetup'){const d=m.d,n0=d.t[0].length,n1=d.t[1].length,ready=n0===2&&n1===2,act=n0<2?0:n1<2?1:-1;
@@ -1292,6 +1703,7 @@ const A={
   // ajustes
   tog(k){S.settings[k]=!S.settings[k];if(k==='haptics')buzz(20);commit()},
   theme(v){S.settings.theme=v;commit()},
+  skin(v){S.settings.skin=v==='glass'?'glass':'neon';commit()},
   askWipe(){modal={type:'confirm',title:'¿Borrar datos de este móvil?',text:'Se borra la partida a medias guardada aquí. La liga online no se toca.',yes:'Borrar',ok:'wipe'};render()},
   wipe(){const st=S.settings,c=S.code;localStorage.removeItem(KEY);S=load();S.settings=st;S.code=c;undo.mus=[];modal=null;save();render();toast('Datos borrados');sync()}
 };
@@ -1313,6 +1725,8 @@ function run(a,p){
    Cada móvil elige su color (S.settings.color). De él se toma el tono y la saturación y se generan
    todos los colores (fondo, superficies, acento, equipos) con luminosidades fijas, para que se lea bien
    en modo oscuro y claro elija el color que elija. Sin color elegido se usan los del CSS. */
+const COLORS_G=['#94d5a2','#7fb8ff','#b9a2ff','#ff9fc8','#ff9e7a','#f0cf62','#62d3cb','#e57373'];
+const colorList=()=>SKIN()==='glass'?COLORS_G:COLORS;
 const COLORS=['#ff6fb5','#ffc900','#4fc3f7','#7cf29a','#ff8a5c','#b69cff','#2fe0c9','#ff5a5a']; // colores planos y saturados, tipo pegatina
 const CKEYS=['--bg','--surface','--surface2','--line','--text','--muted','--accent','--on-accent','--a','--a-soft','--b','--b-soft','--ok','--shadow'];
 function toHS(hex){
@@ -1325,13 +1739,21 @@ function toHS(hex){
 }
 const isDark=()=>S.settings.theme==='dark'||(S.settings.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);
 // Colores que se pueden pintar uno a uno desde el pincel: [variable, nombre, para qué sirve]
+const PAINT_G=[['--bg','Fondo','detrás de todo'],['--surface','Cristal','tinte de tarjetas y diálogos'],['--surface2','Cristal 2','botones y fichas'],
+  ['--line','Líneas','bordes y separadores'],['--text','Texto','letras'],['--muted','Texto suave','ayudas y fechas'],
+  ['--accent','Principal','botones y títulos'],['--on-accent','Sobre principal','letra sobre botones de color'],
+  ['--a','Equipo 1','pareja de la izquierda'],['--b','Equipo 2','pareja de la derecha'],
+  ['--ok','Bien','victorias y en línea'],['--danger','Peligro','borrar y errores'],['--warn','Aviso','órdago y etiquetas']];
+const paintList=()=>SKIN()==='glass'?PAINT_G:PAINT;
 const PAINT=[['--bg','Fondo','detrás de todo'],['--surface','Cristal','tinte de cajas y diálogos'],['--surface2','Cristal 2','tinte de fichas y ajustes'],
   ['--line','Tubo neutro','bordes sin color y reflejos'],['--text','Texto','letras'],['--muted','Texto suave','ayudas y fechas'],
   ['--accent','Neón principal','botones y títulos'],['--on-accent','Sobre neón','letra sobre tubos rellenos'],
   ['--a','Neón equipo 1','pareja de la izquierda'],['--b','Neón equipo 2','pareja de la derecha'],
   ['--ok','Bien','victorias y en línea'],['--danger','Peligro','borrar y errores'],['--warn','Aviso','órdago y avisos']];
 // Retoques del usuario por modo: S.settings.custom = {dark:{'--bg':'#…'}, light:{…}}
-const customOf=()=>{const c=S.settings.custom||{};return c[isDark()?'dark':'light']||{}};
+const SKIN=()=>S.settings.skin==='glass'?'glass':'neon';
+const CK=()=>SKIN()==='glass'?'customG':'custom'; // retoques del pincel por estilo
+const customOf=()=>{const c=S.settings[CK()]||{};return c[isDark()?'dark':'light']||{}};
 // Valor actual de una variable en #rrggbb (para el selector de color)
 const tokCv=document.createElement('canvas').getContext('2d');
 function tokHex(k){const v=getComputedStyle(document.documentElement).getPropertyValue(k).trim();
@@ -1348,9 +1770,26 @@ function paint(){
   if(cu['--a']||cu['--accent'])st.setProperty('--a-soft','color-mix(in srgb,var(--a) 22%,transparent)');
   if(cu['--b'])st.setProperty('--b-soft','color-mix(in srgb,var(--b) 22%,transparent)');
 }
+// Receta del estilo cristal (la del diseño original): tonos suaves, fondo casi neutro
+function basePaintG(st,hex){
+  const[h,s0]=toHS(hex),gray=s0<8,s=gray?s0:Math.max(35,Math.min(80,s0)),hb=(h+58)%360;
+  const c=(H,S_,L,a)=>`hsl(${H} ${S_}% ${L}%${a==null?'':' / '+a})`;
+  const v=isDark()
+    ?{'--bg':c(h,gray?0:13,8),'--surface':c(h,gray?0:9,11),'--surface2':c(h,gray?0:6,17),'--line':c(h,gray?0:6,27),
+      '--text':c(h,gray?0:8,88),'--muted':c(h,gray?0:5,56),'--accent':c(h,s,72),'--on-accent':c(h,gray?0:100,12),
+      '--b':c(hb,gray?0:Math.round(s*.8),76),'--a-soft':c(h,s,72,.14),'--b-soft':c(hb,gray?0:Math.round(s*.8),76,.14),
+      '--shadow':'0 10px 30px rgba(0,0,0,.5)'}
+    :{'--bg':c(h,gray?0:40,97),'--surface':'#fff','--surface2':c(h,gray?0:15,90),'--line':c(h,gray?0:10,77),
+      '--text':c(h,gray?0:10,10),'--muted':c(h,gray?0:5,38),'--accent':c(h,Math.min(s,60),30),'--on-accent':'#fff',
+      '--b':c(hb,gray?0:35,33),'--a-soft':c(h,Math.min(s,60),30,.12),'--b-soft':c(hb,gray?0:35,33,.12),
+      '--shadow':'0 10px 30px rgba(0,0,0,.16)'};
+  v['--a']=v['--accent'];v['--ok']=v['--accent'];
+  for(const k in v)st.setProperty(k,v[k]);
+}
 // Paleta generada a partir de un solo color (color rápido)
 function basePaint(st,hex){
   if(!/^#[0-9a-f]{6}$/i.test(hex||''))return;
+  if(SKIN()==='glass')return basePaintG(st,hex);
   // Receta neón: en oscuro, fondo casi negro teñido y tubos muy vivos; en claro, vidrio pálido y tubos más hondos
   const[h,s0]=toHS(hex),gray=s0<8,s=gray?0:Math.max(75,Math.min(100,s0)),hb=(h+150)%360;
   const c=(H,S_,L,a)=>`hsl(${H} ${S_}% ${L}%${a==null?'':' / '+a})`;
@@ -1368,8 +1807,8 @@ function basePaint(st,hex){
 }
 Object.assign(A,{
   colors(){modal={type:'color'};render()},
-  resetTok(k){const c=S.settings.custom||{},m=isDark()?'dark':'light';if(c[m])delete c[m][k];save();render()},
-  resetPaint(){S.settings.color=null;S.settings.custom={};save();render()},
+  resetTok(k){const c=S.settings[CK()]||{},m=isDark()?'dark':'light';if(c[m])delete c[m][k];save();render()},
+  resetPaint(){S.settings.color=null;S.settings[CK()]={};save();render()},
   setColor(hex){S.settings.color=hex||null;save();render()},
   // filtro de "Todas las partidas" (vMatches)
   mfOpen(k){mf.open=mf.open===k?null:k;mf.pp=[];render()},
@@ -1408,6 +1847,7 @@ function patchEl(o,n){
 function render(){
   const locked=!S.code,v=locked?'lock':view(),st=S.settings;
   if(st.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=st.theme;
+  const sk=SKIN();document.getElementById('sk-neon').media=sk==='neon'?'all':'not all';document.getElementById('sk-glass').media=sk==='glass'?'all':'not all';
   paint();
   const html=locked?vLock():v==='mus'?vMus():v==='settings'?vSettings():v==='liga'?vLiga():v==='partidas'?vMatches():vHome();
   const app=document.getElementById('app');
@@ -1441,7 +1881,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.dataset.g){lgDraft[t.dataset.g]=t.value;return}
-  if(t.dataset.tok){const c=S.settings.custom=S.settings.custom||{},m=isDark()?'dark':'light';(c[m]=c[m]||{})[t.dataset.tok]=t.value;save();render();return}
+  if(t.dataset.tok){const c=S.settings[CK()]=S.settings[CK()]||{},m=isDark()?'dark':'light';(c[m]=c[m]||{})[t.dataset.tok]=t.value;save();render();return}
   if(t.dataset.color){S.settings.color=t.value;save();render();return} // vista previa mientras se mueve el selector
   if(modal&&t.dataset.k)modal.d[t.dataset.k]=t.value;
   if(modal&&t.dataset.k==='q'){const g=document.getElementById('pgrid');if(g)patch(g,pgrid(modal.d))} // filtra sin perder el foco
@@ -1486,7 +1926,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261119114943';
+const BUILD='20261120193705';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
