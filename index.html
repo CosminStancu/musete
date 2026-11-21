@@ -594,6 +594,12 @@ button.set:active{box-shadow:none}
 #toast{--c:var(--warn);background:var(--warn);border:2.5px solid var(--tube);box-shadow:var(--refl),var(--glow)}
 @keyframes buzz{0%,92%,100%{opacity:1}93%{opacity:.82}94%{opacity:1}96%{opacity:.88}}
 @keyframes flick{0%,18%,22%,62%,100%{opacity:1}20%,60%{opacity:.35}21%{opacity:.9}61%{opacity:.5}}
+
+/* nombre de pareja tocable para mezclar otro: dado pequeño y tenue, sin molestar */
+.tname .tn{display:flex;align-items:center;gap:5px;min-width:0;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
+.tname .tn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
+.rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <style id="sk-baraja" media="not all">/* ───────── Baraja española ───────── */
 :root{
@@ -1066,6 +1072,12 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 .paint .rs{width:32px;height:32px;flex:none;font-size:18px}
 .picker{background:var(--surface2);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent)}
 .swatch{box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}
+
+/* nombre de pareja tocable para mezclar otro: dado pequeño y tenue, sin molestar */
+.tname .tn{display:flex;align-items:center;gap:5px;min-width:0;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
+.tname .tn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
+.rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <style id="sk-glass" media="not all">/* ───────── Original cristal ───────── */
 :root{
@@ -1476,6 +1488,12 @@ button.score{color:var(--text)}
 .paint small{font-size:11px;color:var(--muted)}
 .paint .rs{width:32px;height:32px;flex:none;font-size:18px}
 .picker{background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
+
+/* nombre de pareja tocable para mezclar otro: dado pequeño y tenue, sin molestar */
+.tname .tn{display:flex;align-items:center;gap:5px;min-width:0;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
+.tname .tn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
+.rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -1854,7 +1872,7 @@ function vMus(){
   const m=S.mus,ses=m.ses||[0,0],h2=h2h(m),L=m.sw?1:0,R=1-L,h=[h2[L],h2[R]]; // L/R: equipo dibujado a izquierda/derecha
   const team=t=>{const p=t?m.pb:m.pa,n=esc(t?m.b:m.a);
     return `<section class="team t${t}${m.sw?' swp':''}">
-      <div class="tname" aria-label="${n}: ${ses[t]} ganadas en esta sesión"><span class="tn">${n}</span><b class="ses" title="Ganadas en esta sesión">${ses[t]}</b></div>
+      <div class="tname" aria-label="${n}: ${ses[t]} ganadas en esta sesión"><button class="tn" data-a="rename" data-p="${t}" aria-label="${n}. Tocar para otro nombre"><span>${n}</span><i class="rdice">${I.dice}</i></button><b class="ses" title="Ganadas en esta sesión">${ses[t]}</b></div>
       <div class="bon">${BON.map((b,i)=>`${i===3?'<span class="brk"></span>':''}<button data-a="bonus" data-p="${t},${i}" aria-label="${b[0]}: suma ${b[1]} a ${n}">${b[0]}</button>`).join('')}</div>
       <button class="score" data-a="pts" data-p="${t},1" data-hold aria-label="${p} puntos de ${n}. Tocar suma 1">${p}</button>
       <div class="pm">
@@ -2114,6 +2132,9 @@ const A={
     if(o.includes(a)||o.includes(b)){toast('Uno de los dos ya está en el otro equipo');return}
     d.t[t]=[a,b];genName(t,true);buzz();render()},
   reroll(t){genName(t,true);buzz();render()},
+  // en la partida: tocar el nombre de la pareja lo vuelve a mezclar (el historial va por jugadores, no por nombre)
+  rename(t){const m=S.mus;if(!m||!m.league)return;const ids=t?m.league.b:m.league.a;if(!ids||ids.length<2)return;
+    const k=t?'b':'a';m[k]=blend(pname(ids[0]),pname(ids[1]),[m[t?'a':'b'],m[k]]);buzz();commit()},
   shuffle(){const d=modal.d,s=[...d.t[0],...d.t[1]];
     for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}
     d.t=[s.slice(0,2),s.slice(2)];buzz(15);genName(0,true);genName(1,true);render()},
@@ -2412,7 +2433,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261120214653';
+const BUILD='20261121005540';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
