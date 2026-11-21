@@ -601,6 +601,10 @@ button.set:active{box-shadow:none}
 .tname .tn span{white-space:nowrap}
 .rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
 .rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* MMR: último cambio en verde o rojo */
+.tr .up{color:var(--ok);font-size:13px}.tr .dn{color:var(--danger);font-size:13px}.tr .up,.tr .dn{padding-right:6px;white-space:nowrap}
+.mmrd{font-variant-numeric:tabular-nums}
 </style>
 <style id="sk-baraja" media="not all">/* ───────── Baraja española ───────── */
 :root{
@@ -1080,6 +1084,10 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 .tname .tn span{white-space:nowrap}
 .rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
 .rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* MMR: último cambio en verde o rojo */
+.tr .up{color:var(--ok);font-size:13px}.tr .dn{color:var(--danger);font-size:13px}.tr .up,.tr .dn{padding-right:6px;white-space:nowrap}
+.mmrd{font-variant-numeric:tabular-nums}
 </style>
 <style id="sk-glass" media="not all">/* ───────── Original cristal ───────── */
 :root{
@@ -1497,6 +1505,10 @@ button.score{color:var(--text)}
 .tname .tn span{white-space:nowrap}
 .rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
 .rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* MMR: último cambio en verde o rojo */
+.tr .up{color:var(--ok);font-size:13px}.tr .dn{color:var(--danger);font-size:13px}.tr .up,.tr .dn{padding-right:6px;white-space:nowrap}
+.mmrd{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -1754,6 +1766,33 @@ function motesHtml(D){
     return `<div class="aw"><div class="ah"><button class="an" data-a="atitle" data-p="${a[0]}">${esc(awName(a[0],a[1]))}<i>✎</i></button><span class="av">${r.v===null?'':esc(a[5](r.v))}</span></div>
       <div class="ar">${esc(a[2])}</div><div class="ao">${r.v===null?'<span style="color:var(--muted);font-weight:400">sin dueño todavía</span>':r.h.map(p=>esc(p.name)).join(', ')}</div></div>`}).join('')+`</section>`;
 }
+/* MMR: Elo por jugador. Todos empiezan en 1000; la pareja vale la media de sus dos jugadores.
+   Esperado E = 1/(1+10^((Rrival-Rpropia)/400)); cambio = K · margen · (resultado − E).
+   K = 40 en las 10 primeras partidas de cada uno (encuentra su nivel rápido) y 20 después.
+   margen: ganar de paliza cuenta hasta un 50 % más (40-5 pesa más que 40-38).
+   Se recalcula entero desde el historial: las partidas borradas o restauradas cuentan o no solas. */
+const MMR0=1000,PROV=5;
+let mmrMemo=null;
+function mmrData(){
+  const ms=allMatches().slice().sort((x,y)=>x.date-y.date||String(x.uid).localeCompare(String(y.uid)));
+  const key=S.league.players.length+'|'+ms.map(m=>m.uid+m.w+m.ja+m.jb).join(',');
+  if(mmrMemo&&mmrMemo.key===key)return mmrMemo;
+  const R={},M={},get=id=>R[id]||(R[id]={r:MMR0,n:0,best:MMR0,last:0,hist:[MMR0]});
+  S.league.players.forEach(p=>get(p.id));
+  ms.forEach(m=>{
+    if(!m.a||!m.b||m.a.length!==2||m.b.length!==2)return;
+    const ra=(get(m.a[0]).r+get(m.a[1]).r)/2,rb=(get(m.b[0]).r+get(m.b[1]).r)/2;
+    const ea=1/(1+Math.pow(10,(rb-ra)/400)),sa=m.w?0:1;
+    const hi=Math.max(m.ja||0,m.jb||0,1),mg=1+.5*Math.min(1,Math.abs((m.ja||0)-(m.jb||0))/hi);
+    const ds=[0,0];
+    [[m.a,sa-ea],[m.b,(1-sa)-(1-ea)]].forEach(([ids,x],t)=>ids.forEach(id=>{const p=get(id),d=(p.n<10?40:20)*mg*x;
+      p.r+=d;p.n++;p.last=d;p.best=Math.max(p.best,p.r);p.hist.push(p.r);ds[t]+=d/2}));
+    M[m.uid]={da:ds[0],db:ds[1],pa:Math.round(100*ea)};
+  });
+  return mmrMemo={key,R,M};
+}
+const mmrOf=id=>(mmrData().R[id]||{r:MMR0}).r;
+const sgn=v=>(v>=0?'+':'−')+Math.abs(Math.round(v));
 const kv=(l,v)=>`<div class="kv"><span>${l}</span><b>${v}</b></div>`;
 const noGame='<div class="row"><button class="btn ghost" data-a="close">Cerrar</button></div>';
 const pcs=(g,n)=>`${Math.round(100*g/n)}% (${g}-${n-g})`;
@@ -1767,6 +1806,7 @@ function dPlayer(m){
   const nem=srt(opp.filter(x=>x.pj-x.g>0),x=>(x.pj-x.g)/x.pj)[0],cli=srt(opp.filter(x=>x.g>0),x=>x.g/x.pj)[0];
   const who=(x,f)=>`${esc(pname(x.id))} · ${f(x)}`;
   return `<h2>${esc(p.name)}</h2><div class="hint">${p.pj} ${p.pj===1?'partida':'partidas'} · ${p.g} ganadas · ${p.pj-p.g} perdidas</div>
+  ${(o=>o&&o.n?kv('MMR',`${Math.round(o.r)}${o.n<PROV?' (provisional)':''} · mejor ${Math.round(o.best)}`):'')(mmrData().R[m.id])}
   ${p.pj?kv('Forma (últimas 5)',fmDots(p)):''}
   ${p.cw>=1?kv('Racha actual',p.cw+(p.cw===1?' victoria':' victorias seguidas')):p.cl>=1?kv('Racha actual',p.cl+(p.cl===1?' derrota':' derrotas seguidas')):''}
   ${p.bw>=2||p.bl>=2?kv('Mejor / peor racha',`${p.bw} ganadas / ${p.bl} perdidas`):''}
@@ -1814,13 +1854,12 @@ function dTitle(m){
   <label class="field"><span>Nombre (máx. 24)</span><input data-k="v" data-enter="titleSet" value="${esc(m.d.v)}" maxlength="24" autocomplete="off" aria-label="Nombre del mote"></label>
   <div class="row"><button class="btn ghost" data-a="close">Cancelar</button><button class="btn ghost" data-a="titleSet" data-p="reset">Restaurar</button><button class="btn primary" data-a="titleSet">Guardar</button></div>`;
 }
-// Pronóstico para el diálogo de nueva partida: sin Elo, solo récords y % de victorias suavizado
+// Pronóstico para el diálogo de nueva partida: probabilidad según el MMR (Elo) de cada pareja, más récords
 function forecastHtml(A,B){
   const D=lgData(),P=D.P,key=ids=>[...ids].sort((x,y)=>x-y).join('-'),kA=key(A),kB=key(B),ids=[...A,...B];
   if(!ids.some(id=>P[id]&&P[id].pj))return '';
   const h=[0,0];D.ms.forEach(x=>{const a=key(x.a),b=key(x.b);if(a===kA&&b===kB)h[x.w]++;else if(a===kB&&b===kA)h[1-x.w]++});
-  const rt=id=>P[id]?(P[id].g+2)/(P[id].pj+4):.5; // 2 victorias y 2 derrotas ficticias por jugador
-  const sA=(rt(A[0])+rt(A[1]))/2,sB=(rt(B[0])+rt(B[1]))/2,pA=Math.round(100*sA*(1-sB)/(sA*(1-sB)+sB*(1-sA))),pB=100-pA;
+  const rA=(mmrOf(A[0])+mmrOf(A[1]))/2,rB=(mmrOf(B[0])+mmrOf(B[1]))/2,pA=Math.round(100/(1+Math.pow(10,(rB-rA)/400))),pB=100-pA;
   const nm=ids=>esc(ids.map(pname).join(' + '));
   const tr=(k,ids)=>{const o=D.T[k]||{pj:0,g:0};return `<div class="fl"><b>${nm(ids)}</b>: ${o.pj?`juntos ${o.g} G · ${o.pj-o.g} P`:'nunca han jugado juntos'}</div>`};
   const st=[],ps=ids.map(id=>P[id]).filter(Boolean),rec=Math.max(0,...D.list.map(p=>p.bw));
@@ -1832,7 +1871,7 @@ function forecastHtml(A,B){
     rv=(side>=0?(side<2?B:A):ids).map(id=>P[id]).filter(r=>r&&r.id!==ld.id&&r.g+1>=ld.g).map(r=>esc(r.name));
     if(rv.length)st.push(side>=0?`${esc(ld.name)} se juega el liderato: si pierde, ${rv.join(' y ')} le alcanza${rv.length>1?'n':''}`
       :`${rv.join(' y ')} puede${rv.length>1?'n':''} alcanzar al líder ${esc(ld.name)} si gana${rv.length>1?'n':''}`)}
-  return `<div class="fc"><div class="fh"><b>Pronóstico</b><small>aproximado, sin Elo</small></div>
+  return `<div class="fc"><div class="fh"><b>Pronóstico</b><small>según MMR: ${Math.round(rA)} vs ${Math.round(rB)}</small></div>
     <div class="fp"><span class="a">${pA}%</span><span class="b">${pB}%</span></div><div class="fgb"><i style="width:${pA}%"></i></div>
     <div class="fl">Entre estas parejas: <b>${h[0]}–${h[1]}</b></div>${tr(kA,A)}${tr(kB,B)}
     ${st.slice(0,4).map(t=>`<div class="fl">• ${t}</div>`).join('')}</div>`;
@@ -1904,7 +1943,7 @@ function vMus(){
 function mRow(m){
   const fmt=ts=>new Date(ts).toLocaleDateString('es-ES',{day:'numeric',month:'short'});
   return `<div class="match" data-a="mdet" data-p="${esc(m.uid)}"><span class="d">${fmt(m.date)}</span>
-      <span class="mt"><b class="${m.w?'':'w'}">${esc(m.na)}</b> ${m.ja}–${m.jb} <b class="${m.w?'w':''}">${esc(m.nb)}</b>${m.d&&m.d.o?`<i class="og">órdago de ${esc(pname(m.d.o.by))}</i>`:''}${mtags(m).map(t=>`<i class="tg">${t}</i>`).join('')}${S.league.pending.includes(m)?'<small>pendiente de subir</small>':''}</span>
+      <span class="mt"><b class="${m.w?'':'w'}">${esc(m.na)}</b> ${m.ja}–${m.jb} <b class="${m.w?'w':''}">${esc(m.nb)}</b>${(x=>x?`<i class="og mmrd">${sgn(m.w?x.db:x.da)} MMR</i>`:'')(mmrData().M[m.uid])}${m.d&&m.d.o?`<i class="og">órdago de ${esc(pname(m.d.o.by))}</i>`:''}${mtags(m).map(t=>`<i class="tg">${t}</i>`).join('')}${S.league.pending.includes(m)?'<small>pendiente de subir</small>':''}</span>
       <button class="ic" data-a="askDelM" data-p="${esc(m.uid)}" aria-label="Borrar partida">✕</button></div>`;
 }
 
@@ -1939,6 +1978,16 @@ function vMatches(){
     ${ms.length?ms.map(mRow).join(''):`<p class="hint">${sel.length===2?'No han jugado juntos de pareja. ¿Rivalidad eterna?':'No hay partidas.'}</p>`}
   </section>`;
 }
+function mmrCard(){
+  const R=mmrData().R,ps=S.league.players.map(p=>({id:p.id,name:p.name,...(R[p.id]||{r:MMR0,n:0,last:0})})).filter(o=>o.n);
+  if(!ps.length)return '';
+  ps.sort((x,y)=>(x.n<PROV)-(y.n<PROV)||y.r-x.r);
+  return `<section class="card"><h3>MMR</h3>
+    <div class="tr th"><span></span><span></span><span>PJ</span><span></span><span>Últ.</span><span>MMR</span></div>
+    ${ps.map((o,i)=>`<div class="tr pl" data-a="pdet" data-p="${o.id}"><span class="pos">${o.n<PROV?'·':i+1}</span><span class="nm">${esc(o.name)}${o.n<PROV?`<small>provisional (${o.n} de ${PROV} partidas)</small>`:''}</span><span>${o.n}</span><span></span><span class="${o.last>=0?'up':'dn'}">${sgn(o.last)}</span><span class="g">${Math.round(o.r)}</span></div>`).join('')}
+    <p class="rec">Empieza en ${MMR0}. Ganar a quien tiene más MMR sube mucho; perder con quien tiene menos baja mucho. Las palizas cuentan más.</p>
+  </section>`;
+}
 function vLiga(){
   const L=S.league;
   const st=stats(),pct=o=>o.pj?Math.round(100*o.g/o.pj)+'%':'–',pend=L.pending.length+L.dels.length;
@@ -1950,7 +1999,7 @@ function vLiga(){
   `<section class="card lg"><h2>${esc(L.name)}</h2>
     <div class="status ${offline?'off':''}"><i></i>${offline?'Sin conexión':syncing?'Actualizando…':'Sincronizada'}${pend?` · ${pend} ${pend===1?'cambio pendiente':'cambios pendientes'} de subir`:''}</div>
   </section>
-  <div class="cols"><section class="card"><h3>Jugadores</h3>
+  <div class="cols">${mmrCard()}<section class="card"><h3>Jugadores</h3>
     ${L.players.length?head+st.players.map((o,i)=>`<div class="tr pl" data-a="pdet" data-p="${o.id}">${cells(o,i,o.name,'',(p=>p&&p.pj?`<small>${fmDots(p)}${streakTx(p)}</small>`:'')(D.P[o.id]))}</div>`).join('')+recHtml(D):`<p class="hint">${offline?'Sin conexión: no se pudo cargar la liga.':'Cargando jugadores…'}</p>`}
     <div class="pin" style="margin:10px 0 2px"><input data-g="lp" data-enter="addLP2" value="${esc(lgDraft.lp)}" placeholder="Nuevo jugador" maxlength="14" autocomplete="off" aria-label="Nuevo jugador"><button class="btn" data-a="addLP2">Añadir</button></div>
   </section>
@@ -2436,7 +2485,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261121010130';
+const BUILD='20261121012558';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
