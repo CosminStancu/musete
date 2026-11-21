@@ -605,6 +605,19 @@ button.set:active{box-shadow:none}
 /* MMR: último cambio en verde o rojo */
 .tr .up{color:var(--ok);font-size:13px}.tr .dn{color:var(--danger);font-size:13px}.tr .up,.tr .dn{padding-right:6px;white-space:nowrap}
 .mmrd{font-variant-numeric:tabular-nums}
+
+/* Liga: tarjetas plegables y ordenables */
+.lch{display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lch h3{min-width:0}.lch h3 button{all:unset;cursor:pointer}.lch h3 button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.lch .chv{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;color:var(--muted)}
+.lch .chv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.lcard.shut .chv svg{transform:rotate(-90deg)}.lcard.shut h3{margin-bottom:0}
+.lch .lmv{width:36px;height:36px}.lch .lmv:first-of-type{margin-left:auto}.lch .lmv~.chv{display:none}.lch .lmv:disabled{opacity:.25}
+.lhint{margin:-6px 0 10px;text-align:center}
+.bar .ic.on{color:var(--accent)}
+/* neón: título es pestaña sobre el borde; flechas a su altura */
+.lch .lmv,.lch .chv{margin-top:-30px;margin-bottom:8px}.lcard.shut .lch .lmv,.lcard.shut .lch .chv{margin-bottom:0}.lcard.shut .lch h3{margin-bottom:-2px}
+.lch .lmv,.lch .chv{background:var(--surface);border-radius:50%}
 </style>
 <style id="sk-baraja" media="not all">/* ───────── Baraja española ───────── */
 :root{
@@ -1088,6 +1101,18 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 /* MMR: último cambio en verde o rojo */
 .tr .up{color:var(--ok);font-size:13px}.tr .dn{color:var(--danger);font-size:13px}.tr .up,.tr .dn{padding-right:6px;white-space:nowrap}
 .mmrd{font-variant-numeric:tabular-nums}
+
+/* Liga: tarjetas plegables y ordenables */
+.lch{display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lch h3{min-width:0}.lch h3 button{all:unset;cursor:pointer}.lch h3 button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.lch .chv{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;color:var(--muted)}
+.lch .chv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.lcard.shut .chv svg{transform:rotate(-90deg)}.lcard.shut h3{margin-bottom:0}
+.lch .lmv{width:36px;height:36px}.lch .lmv:first-of-type{margin-left:auto}.lch .lmv~.chv{display:none}.lch .lmv:disabled{opacity:.25}
+.lhint{margin:-6px 0 10px;text-align:center}
+.bar .ic.on{color:var(--accent)}
+/* baraja: el palo de la esquina baja abajo para dejar sitio a la flecha; plegada, sin palo */
+.lcard::after{top:auto;bottom:10px}.lcard.shut::after{display:none}.lch .chv{color:var(--muted)}
 </style>
 <style id="sk-glass" media="not all">/* ───────── Original cristal ───────── */
 :root{
@@ -1509,6 +1534,16 @@ button.score{color:var(--text)}
 /* MMR: último cambio en verde o rojo */
 .tr .up{color:var(--ok);font-size:13px}.tr .dn{color:var(--danger);font-size:13px}.tr .up,.tr .dn{padding-right:6px;white-space:nowrap}
 .mmrd{font-variant-numeric:tabular-nums}
+
+/* Liga: tarjetas plegables y ordenables */
+.lch{display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lch h3{min-width:0}.lch h3 button{all:unset;cursor:pointer}.lch h3 button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.lch .chv{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;color:var(--muted)}
+.lch .chv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.lcard.shut .chv svg{transform:rotate(-90deg)}.lcard.shut h3{margin-bottom:0}
+.lch .lmv{width:36px;height:36px}.lch .lmv:first-of-type{margin-left:auto}.lch .lmv~.chv{display:none}.lch .lmv:disabled{opacity:.25}
+.lhint{margin:-6px 0 10px;text-align:center}
+.bar .ic.on{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1891,6 +1926,9 @@ const I={
   minus:'<svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',
   al:'<svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
   ar:'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  up:'<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>',
+  dn:'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
+  sort:'<svg viewBox="0 0 24 24"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>',
   dice:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 15h.01M15 9h.01M9 15h.01M12 12h.01"/></svg>'
 };
 const bar=(title,right='')=>`<header class="bar"><button class="ic" data-a="back" aria-label="Volver">${I.back}</button><h1>${esc(title)}</h1>${right}</header>`;
@@ -1988,6 +2026,18 @@ function mmrCard(){
     <p class="rec">Empieza en ${MMR0}. Ganar a quien tiene más MMR sube mucho; perder con quien tiene menos baja mucho. Las palizas cuentan más.</p>
   </section>`;
 }
+/* Tarjetas de la liga: cada una se pliega y se ordena a gusto (se guarda en este móvil) */
+const LCK=['mmr','jug','par','lan','ord','mot','part'];
+let lgEdit=false,lgVis=[];
+const LC=()=>{const c=S.settings.lc=S.settings.lc||{o:[],open:{jug:true}};c.o=[...c.o.filter(k=>LCK.includes(k)),...LCK.filter(k=>!c.o.includes(k))];return c};
+function fold(k,title,body){
+  const c=LC(),op=!!c.open[k],vi=lgVis.indexOf(k);
+  return `<section class="card lcard ${op?'':'shut'}"><div class="lch" data-a="lfold" data-p="${k}"><h3><button data-a="lfold" data-p="${k}" aria-expanded="${op}">${title}</button></h3>
+    ${lgEdit?`<button class="ic lmv" data-a="lmove" data-p="${k},-1" aria-label="Subir ${title}" ${vi<1?'disabled':''}>${I.up}</button><button class="ic lmv" data-a="lmove" data-p="${k},1" aria-label="Bajar ${title}" ${vi<0||vi>=lgVis.length-1?'disabled':''}>${I.dn}</button>`:''}
+    <i class="chv">${I.dn}</i></div>${op?body:''}</section>`;
+}
+// convierte una tarjeta "<section class=card><h3>T</h3>…</section>" en plegable
+const foldS=(k,h)=>{const m=h&&h.match(/^\s*<section class="card"><h3>([^<]*)<\/h3>([\s\S]*)<\/section>\s*$/);return m?fold(k,m[1],m[2]):''};
 function vLiga(){
   const L=S.league;
   const st=stats(),pct=o=>o.pj?Math.round(100*o.g/o.pj)+'%':'–',pend=L.pending.length+L.dels.length;
@@ -1995,29 +2045,31 @@ function vLiga(){
   const cells=(o,i,name,sub,fm)=>`<span class="pos">${i+1}</span><span class="nm">${esc(name)}${sub?`<small>${esc(sub)}</small>`:''}${fm||''}</span><span>${o.pj}</span><span class="g">${o.g}</span><span>${o.pj-o.g}</span><span>${pct(o)}</span>`;
   const fmt=ts=>new Date(ts).toLocaleDateString('es-ES',{day:'numeric',month:'short'});
   const ms=allMatches().reverse(),D=lgData();
-  return bar('Liga',`<button class="ic ${syncing?'spin':''}" data-a="resync" aria-label="Actualizar">${I.redo}</button>`)+
-  `<section class="card lg"><h2>${esc(L.name)}</h2>
-    <div class="status ${offline?'off':''}"><i></i>${offline?'Sin conexión':syncing?'Actualizando…':'Sincronizada'}${pend?` · ${pend} ${pend===1?'cambio pendiente':'cambios pendientes'} de subir`:''}</div>
-  </section>
-  <div class="cols">${mmrCard()}<section class="card"><h3>Jugadores</h3>
+  const P={};
+  P.mmr=()=>foldS('mmr',mmrCard());
+  P.jug=()=>fold('jug','Jugadores',`
     ${L.players.length?head+st.players.map((o,i)=>`<div class="tr pl" data-a="pdet" data-p="${o.id}">${cells(o,i,o.name,'',(p=>p&&p.pj?`<small>${fmDots(p)}${streakTx(p)}</small>`:'')(D.P[o.id]))}</div>`).join('')+recHtml(D):`<p class="hint">${offline?'Sin conexión: no se pudo cargar la liga.':'Cargando jugadores…'}</p>`}
-    <div class="pin" style="margin:10px 0 2px"><input data-g="lp" data-enter="addLP2" value="${esc(lgDraft.lp)}" placeholder="Nuevo jugador" maxlength="14" autocomplete="off" aria-label="Nuevo jugador"><button class="btn" data-a="addLP2">Añadir</button></div>
-  </section>
-  ${st.pairs.length?`<section class="card"><h3>Parejas</h3>${head}${st.pairs.map((o,i)=>`<div class="tr">${cells(o,i,o.name,o.ids.map(pname).join(' + '))}</div>`).join('')}</section>`:''}
-  ${st.players.some(o=>o.e.some(Boolean))?`<section class="card"><h3>Puntos por lance</h3>
+    <div class="pin" style="margin:10px 0 2px"><input data-g="lp" data-enter="addLP2" value="${esc(lgDraft.lp)}" placeholder="Nuevo jugador" maxlength="14" autocomplete="off" aria-label="Nuevo jugador"><button class="btn" data-a="addLP2">Añadir</button></div>`);
+  P.par=()=>st.pairs.length?fold('par','Parejas',`${head}${st.pairs.map((o,i)=>`<div class="tr">${cells(o,i,o.name,o.ids.map(pname).join(' + '))}</div>`).join('')}`):'';
+  P.lan=()=>st.players.some(o=>o.e.some(Boolean))?fold('lan','Puntos por lance',`
     <div class="tr th"><span></span><span></span><span>Gr</span><span>Ch</span><span>Pa</span><span>Ju</span></div>
-    ${[...st.players].filter(o=>o.pj).sort((x,y)=>y.e.reduce((a,b)=>a+b)-x.e.reduce((a,b)=>a+b)).map((o,i)=>`<div class="tr"><span class="pos">${i+1}</span><span class="nm">${esc(o.name)}</span>${o.e.map(v=>`<span>${v}</span>`).join('')}</div>`).join('')}
-  </section>`:''}
-  ${st.players.some(o=>o.o[0]||o.o[2])?`<section class="card"><h3>Órdagos</h3>
+    ${[...st.players].filter(o=>o.pj).sort((x,y)=>y.e.reduce((a,b)=>a+b)-x.e.reduce((a,b)=>a+b)).map((o,i)=>`<div class="tr"><span class="pos">${i+1}</span><span class="nm">${esc(o.name)}</span>${o.e.map(v=>`<span>${v}</span>`).join('')}</div>`).join('')}`):'';
+  P.ord=()=>st.players.some(o=>o.o[0]||o.o[2])?fold('ord','Órdagos',`
     <div class="tr th"><span></span><span></span><span>Ech</span><span>Gan</span><span>NQ</span><span>%</span></div>
     ${st.players.filter(o=>o.o[0]||o.o[2]).sort((x,y)=>y.o[1]-x.o[1]||y.o[0]-x.o[0]||y.o[2]-x.o[2]).map((o,i)=>`<div class="tr"><span class="pos">${i+1}</span><span class="nm">${esc(o.name)}</span><span>${o.o[0]}</span><span class="g">${o.o[1]}</span><span>${o.o[2]}</span><span>${o.o[0]?Math.round(100*o.o[1]/o.o[0])+'%':'–'}</span></div>`).join('')}
-    <p class="rec">Ech = querido y echado · Gan = ganados · NQ = no queridos${D.ol.some(Boolean)?`<br>Por lance: ${D.ol.map((v,i)=>`${ENV[i]} ${v}`).join(' · ')}`:''}</p>
-  </section>`:''}
-  ${motesHtml(D)}
-  <section class="card"><h3>Partidas</h3>
+    <p class="rec">Ech = querido y echado · Gan = ganados · NQ = no queridos${D.ol.some(Boolean)?`<br>Por lance: ${D.ol.map((v,i)=>`${ENV[i]} ${v}`).join(' · ')}`:''}</p>`):'';
+  P.mot=()=>foldS('mot',motesHtml(D));
+  P.part=()=>fold('part','Partidas',`
     ${ms.length?ms.slice(0,10).map(mRow).join('')+(ms.length>10?`<button class="btn ghost block more" data-a="go" data-p="partidas">Ver todas (${ms.length})</button>`:'')
-    :'<p class="hint">Aún no hay partidas. Al terminar un mus se apunta sola (no hace falta que lo cantes).</p>'}
-  </section>
+    :'<p class="hint">Aún no hay partidas. Al terminar un mus se apunta sola (no hace falta que lo cantes).</p>'}`);
+  // qué tarjetas salen (las vacías no) y en qué orden; luego se pintan sabiendo vecinos para subir/bajar
+  const vis=LC().o.filter(k=>k==='jug'||k==='part'||(k==='mmr'?mmrCard():k==='mot'?motesHtml(D):P[k]()));
+  lgVis=vis;
+  return bar('Liga',`<button class="ic ${lgEdit?'on':''}" data-a="lord" aria-label="${lgEdit?'Terminar de ordenar':'Ordenar tarjetas'}" aria-pressed="${lgEdit}">${I.sort}</button><button class="ic ${syncing?'spin':''}" data-a="resync" aria-label="Actualizar">${I.redo}</button>`)+
+  `<section class="card lg"><h2>${esc(L.name)}</h2>
+    <div class="status ${offline?'off':''}"><i></i>${offline?'Sin conexión':syncing?'Actualizando…':'Sincronizada'}${pend?` · ${pend} ${pend===1?'cambio pendiente':'cambios pendientes'} de subir`:''}</div>
+  </section>${lgEdit?'<p class="hint lhint">Sube o baja cada tarjeta. Toca el título para abrirla o cerrarla.</p>':''}
+  <div class="cols">${vis.map(k=>P[k]()).join('')}
   <button class="btn primary block" data-a="setup">Nueva partida</button></div>`;
 }
 
@@ -2185,6 +2237,10 @@ const A={
     d.t[t]=[a,b];genName(t,true);buzz();render()},
   reroll(t){genName(t,true);buzz();render()},
   // en la partida: tocar el nombre de la pareja lo vuelve a mezclar (el historial va por jugadores, no por nombre)
+  lfold(k){const c=LC();c.open[k]=!c.open[k];buzz();commit()},
+  lord(){lgEdit=!lgEdit;render()},
+  lmove(k,d){const c=LC(),i=lgVis.indexOf(k),j=i+(+d);if(i<0||j<0||j>=lgVis.length)return;
+    const a=c.o.indexOf(k),b=c.o.indexOf(lgVis[j]);[c.o[a],c.o[b]]=[c.o[b],c.o[a]];buzz();commit()},
   rename(t){const m=S.mus;if(!m||!m.league)return;const ids=t?m.league.b:m.league.a;if(!ids||ids.length<2)return;
     const k=t?'b':'a';m[k]=blend(pname(ids[0]),pname(ids[1]),[m[t?'a':'b'],m[k]]);buzz();commit()},
   shuffle(){const d=modal.d,s=[...d.t[0],...d.t[1]];
@@ -2485,7 +2541,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261121012558';
+const BUILD='20261121031021';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
