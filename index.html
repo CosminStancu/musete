@@ -596,8 +596,9 @@ button.set:active{box-shadow:none}
 @keyframes flick{0%,18%,22%,62%,100%{opacity:1}20%,60%{opacity:.35}21%{opacity:.9}61%{opacity:.5}}
 
 /* nombre de pareja tocable para mezclar otro: dado pequeño y tenue, sin molestar */
-.tname .tn{display:flex;align-items:center;gap:5px;min-width:0;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
-.tname .tn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tname{max-width:none;overflow:visible}
+.tname .tn{display:flex;align-items:center;gap:5px;flex:none;overflow:visible;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
+.tname .tn span{white-space:nowrap}
 .rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
 .rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -1074,8 +1075,9 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 .swatch{box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}
 
 /* nombre de pareja tocable para mezclar otro: dado pequeño y tenue, sin molestar */
-.tname .tn{display:flex;align-items:center;gap:5px;min-width:0;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
-.tname .tn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tname{max-width:none;overflow:visible}
+.tname .tn{display:flex;align-items:center;gap:5px;flex:none;overflow:visible;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
+.tname .tn span{white-space:nowrap}
 .rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
 .rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -1490,8 +1492,9 @@ button.score{color:var(--text)}
 .picker{background:var(--glass2);box-shadow:var(--shine),inset 0 0 0 1px var(--edge)}
 
 /* nombre de pareja tocable para mezclar otro: dado pequeño y tenue, sin molestar */
-.tname .tn{display:flex;align-items:center;gap:5px;min-width:0;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
-.tname .tn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tname{max-width:none;overflow:visible}
+.tname .tn{display:flex;align-items:center;gap:5px;flex:none;overflow:visible;padding:0;text-align:left;font:inherit;color:inherit;background:none;border:0;box-shadow:none}
+.tname .tn span{white-space:nowrap}
 .rdice{flex:none;display:grid;opacity:.4;transition:opacity .15s}.tn:active .rdice{opacity:.9}
 .rdice svg{width:.6em;height:.6em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -1872,7 +1875,7 @@ function vMus(){
   const m=S.mus,ses=m.ses||[0,0],h2=h2h(m),L=m.sw?1:0,R=1-L,h=[h2[L],h2[R]]; // L/R: equipo dibujado a izquierda/derecha
   const team=t=>{const p=t?m.pb:m.pa,n=esc(t?m.b:m.a);
     return `<section class="team t${t}${m.sw?' swp':''}">
-      <div class="tname" aria-label="${n}: ${ses[t]} ganadas en esta sesión"><button class="tn" data-a="rename" data-p="${t}" aria-label="${n}. Tocar para otro nombre"><span>${n}</span><i class="rdice">${I.dice}</i></button><b class="ses" title="Ganadas en esta sesión">${ses[t]}</b></div>
+      <div class="tname" aria-label="${n}: ${ses[t]} ganadas en esta sesión"><button class="tn" data-a="rename" data-p="${t}" aria-label="${n}. Tocar para otro nombre"><i class="rdice">${I.dice}</i><span>${n}</span></button><b class="ses" title="Ganadas en esta sesión">${ses[t]}</b></div>
       <div class="bon">${BON.map((b,i)=>`${i===3?'<span class="brk"></span>':''}<button data-a="bonus" data-p="${t},${i}" aria-label="${b[0]}: suma ${b[1]} a ${n}">${b[0]}</button>`).join('')}</div>
       <button class="score" data-a="pts" data-p="${t},1" data-hold aria-label="${p} puntos de ${n}. Tocar suma 1">${p}</button>
       <div class="pm">
@@ -2433,7 +2436,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261121005540';
+const BUILD='20261121010130';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
