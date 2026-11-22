@@ -700,7 +700,12 @@ button.set:active{box-shadow:none}
 .lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
 .lvwait{text-align:center}
 .lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
-.lvmic svg{width:18px;height:18px;margin-right:6px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lvmic{display:inline-flex;align-items:center;justify-content:center;gap:6px}.lvmic svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lvtalk{margin-right:6px}.lvtalk[aria-pressed="true"]{color:var(--accent)}.lvtalk.mut{color:var(--danger)}
+.lvtk{display:grid;gap:8px;margin:4px 0 10px}.lvtr{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;gap:10px;align-items:center}
+.lvtr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lvtr b small{color:var(--muted);font-weight:400}
+.lvtr input[type=range]{width:100%;accent-color:var(--accent)}.lvtr.mut b{color:var(--muted);text-decoration:line-through}
+.lvtr .ic svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <style id="sk-baraja" media="not all">/* ───────── Baraja española ───────── */
 :root{
@@ -1277,7 +1282,12 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 .lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
 .lvwait{text-align:center}
 .lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
-.lvmic svg{width:18px;height:18px;margin-right:6px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lvmic{display:inline-flex;align-items:center;justify-content:center;gap:6px}.lvmic svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lvtalk{margin-right:6px}.lvtalk[aria-pressed="true"]{color:var(--accent)}.lvtalk.mut{color:var(--danger)}
+.lvtk{display:grid;gap:8px;margin:4px 0 10px}.lvtr{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;gap:10px;align-items:center}
+.lvtr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lvtr b small{color:var(--muted);font-weight:400}
+.lvtr input[type=range]{width:100%;accent-color:var(--accent)}.lvtr.mut b{color:var(--muted);text-decoration:line-through}
+.lvtr .ic svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <style id="sk-glass" media="not all">/* ───────── Original cristal ───────── */
 :root{
@@ -1791,7 +1801,12 @@ button.score{color:var(--text)}
 .lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
 .lvwait{text-align:center}
 .lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
-.lvmic svg{width:18px;height:18px;margin-right:6px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lvmic{display:inline-flex;align-items:center;justify-content:center;gap:6px}.lvmic svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lvtalk{margin-right:6px}.lvtalk[aria-pressed="true"]{color:var(--accent)}.lvtalk.mut{color:var(--danger)}
+.lvtk{display:grid;gap:8px;margin:4px 0 10px}.lvtr{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;gap:10px;align-items:center}
+.lvtr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lvtr b small{color:var(--muted);font-weight:400}
+.lvtr input[type=range]{width:100%;accent-color:var(--accent)}.lvtr.mut b{color:var(--muted);text-decoration:line-through}
+.lvtr .ic svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -2289,6 +2304,41 @@ async function audOffer(p){if(!lvAud||!p||p.to!==lvMe||typeof p.d!=='string')ret
   try{await pc.setRemoteDescription({type:'offer',sdp:p.d});await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc);
     if(vpc===pc)rtCast('ans',{from:lvMe,d:pc.localDescription.sdp})}catch(e){toast('No se pudo conectar el audio')}}
 
+/* Hablar: el espectador abre su micro y ofrece una conexión aparte ("tsdp"); la mesa contesta ("tans") y lo oye.
+   La mesa tiene volumen y silencio por cada espectador (solo en su móvil) y avisa al silenciado ("tmute"). Máx. 6 hablando. */
+const lvTalk={}; // id → {pc,name,el,vol,mute}
+function talkDrop(id){const t=lvTalk[id];if(!t)return;delete lvTalk[id];try{t.pc.close()}catch(_){}if(t.el){t.el.pause();t.el.srcObject=null;t.el.remove()}if(modal&&modal.type==='live')soft()}
+const talkAll=()=>Object.keys(lvTalk).forEach(talkDrop);
+async function hostTalk(p){if(!p||typeof p.from!=='string'||!/^[a-z0-9]{6,16}$/.test(p.from)||typeof p.d!=='string')return;
+  const old=lvTalk[p.from],vol=old?old.vol:1,mute=old?old.mute:false;talkDrop(p.from);
+  if(Object.keys(lvTalk).length>=6)return;
+  const name=String(p.name||'').replace(/[<>]/g,'').trim().slice(0,20)||'Espectador';
+  const pc=new RTCPeerConnection(ICE),t=lvTalk[p.from]={pc,name,el:null,vol,mute};
+  pc.ontrack=e=>{const a=t.el||(t.el=document.createElement('audio'));a.autoplay=true;a.setAttribute('playsinline','');if(!a.isConnected)document.body.appendChild(a);
+    a.srcObject=e.streams[0]||new MediaStream([e.track]);a.volume=t.vol;a.muted=t.mute;a.play().catch(()=>{});toast(name+' está hablando');if(modal&&modal.type==='live')soft()};
+  pc.onconnectionstatechange=()=>{if(lvTalk[p.from]!==t)return;if(['failed','closed'].includes(pc.connectionState))talkDrop(p.from);else if(modal&&modal.type==='live')soft()};
+  try{await pc.setRemoteDescription({type:'offer',sdp:p.d});await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc);
+    if(lvTalk[p.from]===t){rtCast('tans',{to:p.from,d:pc.localDescription.sdp});if(t.mute)rtCast('tmute',{to:p.from,on:1})}}catch(e){talkDrop(p.from)}}
+// lado espectador
+let tpc=null,tstream=null,lvTalking=false,lvMuted=false,lvTalkT=0;
+const lvName=()=>{let n='';try{n=localStorage.getItem('musete.lvname')||''}catch(_){}
+  if(!n){n=(prompt('¿Cómo te llamas? Lo verá la mesa')||'').trim().slice(0,20);if(n)try{localStorage.setItem('musete.lvname',n)}catch(_){}}
+  return n||'Espectador'};
+async function talkOffer(){if(!lvTalking||!tstream||!RT.ok)return;
+  if(tpc)try{tpc.close()}catch(_){}
+  const pc=tpc=new RTCPeerConnection(ICE);tstream.getTracks().forEach(x=>pc.addTrack(x,tstream));
+  pc.onconnectionstatechange=()=>{if(tpc!==pc)return;if(pc.connectionState==='connected')toast('La mesa te oye');
+    if(pc.connectionState==='failed'){clearTimeout(lvTalkT);lvTalkT=setTimeout(talkOffer,4000)}};
+  try{await pc.setLocalDescription(await pc.createOffer());await iceDone(pc);if(tpc===pc)rtCast('tsdp',{from:lvMe,name:lvName.cache,d:pc.localDescription.sdp})}catch(e){toast('No se pudo conectar el micro')}}
+async function talkOn(){if(window.MuseteNative){toast('En la app no hay permiso de micro: abre el enlace en el navegador para hablar');return}
+  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast('Este móvil no deja usar el micro aquí');return}
+  lvName.cache=lvName();
+  try{tstream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false})}
+  catch(e){tstream=null;toast('Sin permiso para usar el micro');return}
+  lvTalking=true;lvMuted=false;toast('Conectando tu micro…');talkOffer()}
+function talkOff(){const was=lvTalking;lvTalking=false;lvMuted=false;clearTimeout(lvTalkT);if(tpc)try{tpc.close()}catch(_){}tpc=null;
+  if(tstream){tstream.getTracks().forEach(x=>x.stop());tstream=null}if(was)rtCast('tbye',{from:lvMe})}
+
 // Emisor
 const LVA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const lvCode=()=>{const r=new Uint8Array(5);crypto.getRandomValues(r);return [...r].map(x=>LVA[x%LVA.length]).join('')};
@@ -2297,13 +2347,15 @@ let lvLast='',lvT=0,lvBeat=0;
 function lvSnap(){const m=S.mus,l=m.log||[],x=l[l.length-1],w=modal&&modal.type==='win'?{t:modal.t,pa:modal.pa,pb:modal.pb,o:modal.o?1:0}:null;
   return {a:m.a,b:m.b,pa:m.pa,pb:m.pb,env:m.env,ses:m.ses||[0,0],h:h2h(m),mic:lvMic?1:0,x:x?{k:x.k,t:x.t,i:x.i,v:x.v,n:x.n,dt:x.dt}:null,w}}
 function lvSend(force){if(!RT.ok||!S.mus||!S.mus.live)return;const j=JSON.stringify(lvSnap());if(!force&&j===lvLast)return;lvLast=j;rtCast('s',JSON.parse(j))}
-const lvTx=(ev,p)=>{if(ev==='ask')micOffer(p&&p.id);if(ev==='ans')micAns(p);if(ev==='_open'||ev==='hi')lvSend(true);if(ev==='_open'||ev==='_close'||ev==='_err')soft()};
+const lvTx=(ev,p)=>{if(ev==='tsdp')hostTalk(p);if(ev==='tbye'&&p)talkDrop(p.from);if(ev==='ask')micOffer(p&&p.id);if(ev==='ans')micAns(p);if(ev==='_open'||ev==='hi')lvSend(true);if(ev==='_open'||ev==='_close'||ev==='_err')soft()};
 
 // Espectador
 const lv={code:'',s:null,st:'conn',sw:0,dt:null};
 const lvRx=(ev,p)=>{
-  if(ev==='_open'){lv.st='ok';rtCast('hi',{});audAsk();soft();return}
+  if(ev==='_open'){lv.st='ok';rtCast('hi',{});audAsk();if(lvTalking)talkOffer();soft();return}
   if(ev==='sdp'){audOffer(p);return}
+  if(ev==='tans'){if(p&&p.to===lvMe&&tpc&&typeof p.d==='string')tpc.setRemoteDescription({type:'answer',sdp:p.d}).catch(()=>{});return}
+  if(ev==='tmute'){if(p&&p.to===lvMe){lvMuted=!!p.on;toast(lvMuted?'La mesa te ha silenciado':'La mesa vuelve a oírte');soft()}return}
   if(ev==='_close'||ev==='_err'){if(lv.st!=='end')lv.st='off';soft();return}
   if(ev==='end'){lv.st='end';soft();return}
   if(ev!=='s'||!p||typeof p!=='object')return;
@@ -2320,7 +2372,7 @@ const lvRx=(ev,p)=>{
 const verCode=()=>{const h=location.hash.slice(1),m=h.match(/^ver=?([A-Za-z0-9]{4,8})$/);return m?m[1].toUpperCase():''};
 function vVer(){const c=verCode(),s=lv.s;
   if(s&&lv.code===c){const m={a:s.a,b:s.b,pa:s.pa,pb:s.pb,env:s.env,ses:Array.isArray(s.ses)?s.ses:[0,0],sw:lv.sw};
-    return vMus(m,{h:Array.isArray(s.h)?s.h:[0,0],x:s.x,w:s.w,st:lv.st,mic:!!s.mic,aud:lvAud})}
+    return vMus(m,{h:Array.isArray(s.h)?s.h:[0,0],x:s.x,w:s.w,st:lv.st,mic:!!s.mic,aud:lvAud,talk:lvTalking,tm:lvMuted})}
   return bar('En directo')+`<section class="card lvwait"><h2>Mesa ${esc(c)}</h2>
     <p>${lv.st==='end'?'La partida ha terminado.':lv.st==='off'?'Sin conexión. Reintentando…':'Esperando a la mesa…'}</p>
     <p class="hint">Si tarda, comprueba el código: el móvil que lleva la partida tiene que estar emitiendo (botón de la antena).</p></section>`;
@@ -2329,11 +2381,12 @@ function vVer(){const c=verCode(),s=lv.s;
 function liveSync(){const c=verCode();
   if(c){if(lv.code!==c){lv.code=c;lv.s=null;lv.st='conn';lv.dt=null}rtOpen('rx',c,lvRx);return}
   if(lv.code||lvAud)audStop();
+  if(lvTalking||tpc)talkOff();
   lv.code='';lv.s=null;
   const m=S.mus;
   if(m&&m.live){rtOpen('tx',m.live,lvTx);clearTimeout(lvT);lvT=setTimeout(()=>lvSend(),80);
     if(!lvBeat)lvBeat=setInterval(()=>lvSend(true),20000);return}
-  clearInterval(lvBeat);lvBeat=0;if(lvMic)micOff();
+  clearInterval(lvBeat);lvBeat=0;if(lvMic)micOff();talkAll();
   if(RT.want&&RT.want.role==='tx'){rtCast('end',{});const w=RT.ws;RT.ws=null;RT.want=null;RT.ok=false;clearInterval(RT.hb);clearTimeout(RT.rt);if(w)setTimeout(()=>{try{w.close()}catch(_){}},300)}
   else if(RT.want)rtClose();
 }
@@ -2358,7 +2411,7 @@ function vMus(M,ro){
     </div>`};
   return `<header class="bar"><button class="ic" data-a="back" aria-label="Volver">${I.back}</button>
     <div class="mid"><h1>Mus</h1><div class="tally" aria-label="Total de partidas entre estas parejas: ${h[0]} a ${h[1]}"><small>Total</small><b>${h[0]}</b><i>–</i><b>${h[1]}</b></div></div>
-    <span style="flex:1"></span>${ro?`<span class="lvbadge ${ro.st==='ok'?'':'off'}"><i></i>${ro.st==='ok'?'En directo':ro.st==='end'?'Terminada':'Reconectando…'}</span>${ro.mic?`<button class="ic lvaud" data-a="listen" aria-pressed="${!!ro.aud}" aria-label="${ro.aud?'Dejar de escuchar la mesa':'Escuchar la mesa'}">${ro.aud?I.spk:I.mute}</button>`:''}`:''}<button class="ic" data-a="swap" aria-pressed="${!!m.sw}" aria-label="Cambiar de lado las parejas">${I.swap}</button>${ro?'':`<button class="ic lvb" data-a="live" aria-pressed="${!!m.live}" aria-label="${m.live?'Emitiendo en directo: ver código':'Emitir la partida en directo'}">${I.live}${m.live?'<i class="lvdot"></i>':''}</button><button class="ic" data-a="askNew" aria-label="Nueva partida">${I.redo}</button>`}</header>
+    <span style="flex:1"></span>${ro?`<span class="lvbadge ${ro.st==='ok'?'':'off'}"><i></i>${ro.st==='ok'?'En directo':ro.st==='end'?'Terminada':'Reconectando…'}</span>${ro.mic?`<button class="ic lvaud" data-a="listen" aria-pressed="${!!ro.aud}" aria-label="${ro.aud?'Dejar de escuchar la mesa':'Escuchar la mesa'}">${ro.aud?I.spk:I.mute}</button>`:''}<button class="ic lvtalk ${ro.tm?'mut':''}" data-a="talk" aria-pressed="${!!ro.talk}" aria-label="${ro.talk?(ro.tm?'Te han silenciado. Tocar para cerrar tu micro':'Cerrar tu micro'):'Hablar con la mesa'}">${I.mic}</button>`:''}<button class="ic" data-a="swap" aria-pressed="${!!m.sw}" aria-label="Cambiar de lado las parejas">${I.swap}</button>${ro?'':`<button class="ic lvb" data-a="live" aria-pressed="${!!m.live}" aria-label="${m.live?'Emitiendo en directo: ver código':'Emitir la partida en directo'}">${I.live}${m.live?'<i class="lvdot"></i>':''}</button><button class="ic" data-a="askNew" aria-label="Nueva partida">${I.redo}</button>`}</header>
    <div class="teams">${team(0)}${team(1)}</div>
    <section class="envs">${ENV.map(env).join('')}</section>
    ${ro?`<div class="pill histB lvlast" role="status" aria-live="polite">${esc(lvTxt(m,ro.x))}</div>${ro.w?`<div class="lvwin"><small>Partida terminada</small><b style="color:var(--${ro.w.t?'b':'a'})">¡Gana ${esc(ro.w.t?m.b:m.a)}!</b><span>${ro.w.pa} – ${ro.w.pb}${ro.w.o?' · por órdago':''}</span></div>`:''}`
@@ -2893,6 +2946,9 @@ function vModal(){
     <p class="lvst">${RT.ok?'<i></i>Emitiendo':'Conectando…'}</p>
     <div class="row"><button class="btn primary" data-a="liveShare">Compartir enlace</button><button class="btn ${lvMic?'primary':'ghost'} lvmic" data-a="liveMic" aria-pressed="${!!lvMic}">${I.mic}${lvMic?'Apagar micro':'Abrir micro'}</button></div>
     ${lvMic?`<p class="lvst">${micN()?`${micN()} ${micN()===1?'persona escucha':'personas escuchan'}`:'Micro abierto: nadie escuchando todavía'}</p>`:'<p class="hint" style="text-align:center">Con el micro abierto, quien mire puede oír la mesa.</p>'}
+    ${Object.keys(lvTalk).length?`<span class="olab">Hablan desde fuera</span><div class="lvtk">${Object.entries(lvTalk).map(([id,t])=>`<div class="lvtr ${t.mute?'mut':''}"><b>${esc(t.name)}${t.el?'':' <small>conectando…</small>'}</b>
+      <input type="range" min="0" max="100" step="5" value="${Math.round(t.vol*100)}" data-lvvol="${id}" aria-label="Volumen de ${esc(t.name)}" ${t.mute?'disabled':''}>
+      <button class="ic" data-a="lvTmute" data-p="${id}" aria-pressed="${t.mute}" aria-label="${t.mute?'Dejar hablar a':'Silenciar a'} ${esc(t.name)}">${t.mute?I.mute:I.spk}</button></div>`).join('')}</div>`:''}
     <div class="row"><button class="btn ghost" data-a="liveOff">Dejar de emitir</button><button class="btn ghost" data-a="close">Cerrar</button></div>`;
   }else if(m.type==='verAsk'){
     h=`<h2>Ver en directo</h2><p class="hint">Escribe el código que sale en el móvil de la mesa (botón de la antena).</p>
@@ -3123,6 +3179,8 @@ const A={
   liveShare(){const c=S.mus&&S.mus.live;if(!c)return;const url=lvUrl(c),text=`Mira la partida de mus en directo (código ${c})`;
     if(navigator.share)navigator.share({title:'Musete en directo',text,url}).catch(()=>{});
     else if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado'),()=>toast(url));else toast(url)},
+  async talk(){if(lvTalking)talkOff();else await talkOn();buzz();render()},
+  lvTmute(id){const t=lvTalk[id];if(!t)return;t.mute=!t.mute;if(t.el)t.el.muted=t.mute;rtCast('tmute',{to:id,on:t.mute?1:0});buzz();render()},
   async liveMic(){if(lvMic)micOff();else await micOn();buzz();lvSend(true);render()},
   listen(){if(lvAud){audStop();toast('Audio apagado')}else{lvAud=true;lvEl().play().catch(()=>{});audAsk();toast('Conectando el audio…')}buzz();render()},
   liveOff(){micOff();const m=S.mus;if(m)delete m.live;modal=null;buzz();commit();toast('Ya no se emite')},
@@ -3162,7 +3220,7 @@ Object.assign(A,{
     adminDo('Renombrar mote','league_title_set',{p_key:a[0],p_name:n},()=>{toast(n?'Mote renombrado':'Nombre restaurado');sync()})}
 });
 function run(a,p){
-  if(verCode()&&!['back','go','swap','close','verAsk','verGo','listen'].includes(a))return;
+  if(verCode()&&!['back','go','swap','close','verAsk','verGo','listen','talk'].includes(a))return;
   if(a==='swap'&&verCode()){lv.sw=lv.sw?0:1;buzz();render();return}
   const args=p===undefined||p===''?[]:String(p).split(',').map(x=>x!==''&&!isNaN(x)?Number(x):x);
   if(A[a])A[a](...args);
@@ -3342,6 +3400,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('input',e=>{
   const t=e.target;
+  if(t.dataset.lvvol){const x=lvTalk[t.dataset.lvvol];if(x){x.vol=Math.max(0,Math.min(1,t.value/100));if(x.el)x.el.volume=x.vol}return}
   if(t.dataset.g){lgDraft[t.dataset.g]=t.value;return}
   if(t.dataset.tok){const c=S.settings[CK()]=S.settings[CK()]||{},m=isDark()?'dark':'light';(c[m]=c[m]||{})[t.dataset.tok]=t.value;save();render();return}
   if(t.dataset.color){S.settings.color=t.value;save();render();return} // vista previa mientras se mueve el selector
@@ -3388,7 +3447,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261122210048';
+const BUILD='20261122210943';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
