@@ -699,7 +699,7 @@ button.set:active{box-shadow:none}
 .lvst{text-align:center;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 8px}
 .lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
 .lvwait{text-align:center}
-.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
+.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}.lvaud.need{color:var(--warn);animation:lvbl 1s ease-in-out infinite}
 .lvmic{display:inline-flex;align-items:center;justify-content:center;gap:6px}.lvmic svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lvtalk{margin-right:6px}.lvtalk[aria-pressed="true"]{color:var(--accent)}.lvtalk.mut{color:var(--danger)}
 .lvtk{display:grid;gap:8px;margin:4px 0 10px}.lvtr{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;gap:10px;align-items:center}
@@ -1281,7 +1281,7 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 .lvst{text-align:center;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 8px}
 .lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
 .lvwait{text-align:center}
-.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
+.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}.lvaud.need{color:var(--warn);animation:lvbl 1s ease-in-out infinite}
 .lvmic{display:inline-flex;align-items:center;justify-content:center;gap:6px}.lvmic svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lvtalk{margin-right:6px}.lvtalk[aria-pressed="true"]{color:var(--accent)}.lvtalk.mut{color:var(--danger)}
 .lvtk{display:grid;gap:8px;margin:4px 0 10px}.lvtr{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;gap:10px;align-items:center}
@@ -1800,7 +1800,7 @@ button.score{color:var(--text)}
 .lvst{text-align:center;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 8px}
 .lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
 .lvwait{text-align:center}
-.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
+.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}.lvaud.need{color:var(--warn);animation:lvbl 1s ease-in-out infinite}
 .lvmic{display:inline-flex;align-items:center;justify-content:center;gap:6px}.lvmic svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lvtalk{margin-right:6px}.lvtalk[aria-pressed="true"]{color:var(--accent)}.lvtalk.mut{color:var(--danger)}
 .lvtk{display:grid;gap:8px;margin:4px 0 10px}.lvtr{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,1.3fr) auto;gap:10px;align-items:center}
@@ -2284,8 +2284,9 @@ async function micOn(){if(window.MuseteNative){toast('En la app no hay permiso d
   try{lvMic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false})}
   catch(e){lvMic=null;toast('Sin permiso para usar el micro')}}
 function micOff(){Object.keys(lvPcs).forEach(pcDrop);if(lvMic){lvMic.getTracks().forEach(t=>t.stop());lvMic=null}}
-async function micOffer(id){if(!lvMic||typeof id!=='string'||!/^[a-z0-9]{6,16}$/.test(id))return;pcDrop(id);if(Object.keys(lvPcs).length>=10)return;
-  const pc=new RTCPeerConnection(ICE);lvPcs[id]=pc;lvMic.getTracks().forEach(t=>pc.addTrack(t,lvMic));
+async function micOffer(id){if(!lvMic||typeof id!=='string'||!/^[a-z0-9]{6,16}$/.test(id))return;
+  const old=lvPcs[id];if(old&&(old.connectionState==='new'||old.connectionState==='connecting')&&Date.now()-(old.t0||0)<8000)return;pcDrop(id);if(Object.keys(lvPcs).length>=10)return;
+  const pc=new RTCPeerConnection(ICE);pc.t0=Date.now();lvPcs[id]=pc;lvMic.getTracks().forEach(t=>pc.addTrack(t,lvMic));
   pc.onconnectionstatechange=()=>{if(['failed','closed'].includes(pc.connectionState)&&lvPcs[id]===pc)pcDrop(id);if(modal&&modal.type==='live')soft()};
   try{await pc.setLocalDescription(await pc.createOffer());await iceDone(pc);if(lvPcs[id]===pc)rtCast('sdp',{to:id,d:pc.localDescription.sdp})}catch(e){pcDrop(id)}}
 async function micAns(p){const pc=p&&lvPcs[p.from];if(!pc||typeof p.d!=='string')return;
@@ -2295,14 +2296,15 @@ const lvMe=Math.random().toString(36).slice(2,12);
 let vpc=null,lvAud=false,lvAudT=0;
 const lvEl=()=>{let a=document.getElementById('lvaudio');if(!a){a=document.createElement('audio');a.id='lvaudio';a.autoplay=true;a.setAttribute('playsinline','');document.body.appendChild(a)}return a};
 function audStop(){lvAud=false;clearTimeout(lvAudT);if(vpc)try{vpc.close()}catch(_){}vpc=null;const a=document.getElementById('lvaudio');if(a){a.pause();a.srcObject=null}}
-const audAsk=()=>{if(lvAud&&RT.ok)rtCast('ask',{id:lvMe})};
+let lvAskT=0;
+const audAsk=()=>{if(!lvAud||!RT.ok||Date.now()-lvAskT<3000)return;lvAskT=Date.now();rtCast('ask',{id:lvMe})};
 async function audOffer(p){if(!lvAud||!p||p.to!==lvMe||typeof p.d!=='string')return;
   if(vpc)try{vpc.close()}catch(_){}
   const pc=vpc=new RTCPeerConnection(ICE);
-  pc.ontrack=e=>{const a=lvEl();a.srcObject=e.streams[0]||new MediaStream([e.track]);a.play().catch(()=>toast('Toca el altavoz para oír la mesa'));toast('Escuchando la mesa')};
-  pc.onconnectionstatechange=()=>{if(vpc!==pc)return;if(pc.connectionState==='failed'){toast('No se pudo conectar el audio. Reintentando…');clearTimeout(lvAudT);lvAudT=setTimeout(audAsk,4000)}};
+  pc.ontrack=e=>{const a=lvEl();a.srcObject=e.streams[0]||new MediaStream([e.track]);lvPlay(a);toast('Escuchando la mesa')};
+  pc.onconnectionstatechange=()=>{if(vpc!==pc)return;if(pc.connectionState==='failed'){lvErr('Audio sin conexión, reintentando','ice failed');clearTimeout(lvAudT);lvAudT=setTimeout(audAsk,4000)}};
   try{await pc.setRemoteDescription({type:'offer',sdp:p.d});await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc);
-    if(vpc===pc)rtCast('ans',{from:lvMe,d:pc.localDescription.sdp})}catch(e){toast('No se pudo conectar el audio')}}
+    if(vpc===pc)rtCast('ans',{from:lvMe,d:pc.localDescription.sdp})}catch(e){if(vpc===pc)lvErr('No se pudo conectar el audio',e)}}
 
 /* Hablar: el espectador abre su micro y ofrece una conexión aparte ("tsdp"); la mesa contesta ("tans") y lo oye.
    La mesa tiene volumen y silencio por cada espectador (solo en su móvil) y avisa al silenciado ("tmute"). Máx. 6 hablando. */
@@ -2315,7 +2317,7 @@ async function hostTalk(p){if(!p||typeof p.from!=='string'||!/^[a-z0-9]{6,16}$/.
   const name=String(p.name||'').replace(/[<>]/g,'').trim().slice(0,20)||'Espectador';
   const pc=new RTCPeerConnection(ICE),t=lvTalk[p.from]={pc,name,el:null,vol,mute};
   pc.ontrack=e=>{const a=t.el||(t.el=document.createElement('audio'));a.autoplay=true;a.setAttribute('playsinline','');if(!a.isConnected)document.body.appendChild(a);
-    a.srcObject=e.streams[0]||new MediaStream([e.track]);a.volume=t.vol;a.muted=t.mute;a.play().catch(()=>{});toast(name+' está hablando');if(modal&&modal.type==='live')soft()};
+    a.srcObject=e.streams[0]||new MediaStream([e.track]);a.volume=t.vol;a.muted=t.mute;lvPlay(a);toast(name+' está hablando');if(modal&&modal.type==='live')soft()};
   pc.onconnectionstatechange=()=>{if(lvTalk[p.from]!==t)return;if(['failed','closed'].includes(pc.connectionState))talkDrop(p.from);else if(modal&&modal.type==='live')soft()};
   try{await pc.setRemoteDescription({type:'offer',sdp:p.d});await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc);
     if(lvTalk[p.from]===t){rtCast('tans',{to:p.from,d:pc.localDescription.sdp});if(t.mute)rtCast('tmute',{to:p.from,on:1})}}catch(e){talkDrop(p.from)}}
@@ -2328,16 +2330,26 @@ async function talkOffer(){if(!lvTalking||!tstream||!RT.ok)return;
   if(tpc)try{tpc.close()}catch(_){}
   const pc=tpc=new RTCPeerConnection(ICE);tstream.getTracks().forEach(x=>pc.addTrack(x,tstream));
   pc.onconnectionstatechange=()=>{if(tpc!==pc)return;if(pc.connectionState==='connected')toast('La mesa te oye');
-    if(pc.connectionState==='failed'){clearTimeout(lvTalkT);lvTalkT=setTimeout(talkOffer,4000)}};
-  try{await pc.setLocalDescription(await pc.createOffer());await iceDone(pc);if(tpc===pc)rtCast('tsdp',{from:lvMe,name:lvName.cache,d:pc.localDescription.sdp})}catch(e){toast('No se pudo conectar el micro')}}
+    if(pc.connectionState==='failed'){lvErr('Micro sin conexión, reintentando','ice failed');clearTimeout(lvTalkT);lvTalkT=setTimeout(talkOffer,4000)}};
+  try{await pc.setLocalDescription(await pc.createOffer());await iceDone(pc);if(tpc===pc)rtCast('tsdp',{from:lvMe,name:lvName.cache,d:pc.localDescription.sdp})}catch(e){if(tpc===pc)lvErr('No se pudo conectar el micro',e)}}
 async function talkOn(){if(window.MuseteNative){toast('En la app no hay permiso de micro: abre el enlace en el navegador para hablar');return}
   if(!navigator.mediaDevices||!window.RTCPeerConnection){toast('Este móvil no deja usar el micro aquí');return}
   lvName.cache=lvName();
   try{tstream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false})}
-  catch(e){tstream=null;toast('Sin permiso para usar el micro');return}
+  catch(e){tstream=null;lvErr('Sin permiso para usar el micro',e);return}
   lvTalking=true;lvMuted=false;toast('Conectando tu micro…');talkOffer()}
 function talkOff(){const was=lvTalking;lvTalking=false;lvMuted=false;clearTimeout(lvTalkT);if(tpc)try{tpc.close()}catch(_){}tpc=null;
   if(tstream){tstream.getTracks().forEach(x=>x.stop());tstream=null}if(was)rtCast('tbye',{from:lvMe})}
+
+/* iPhone (Safari) no deja sonar un audio que empieza fuera de un toque: si se bloquea, el siguiente toque en cualquier sitio lo arranca */
+let lvNeedTap=false;
+// error de audio: aviso con el motivo y copia por el canal (evento dbg) para poder diagnosticar móviles que no conectan
+function lvErr(w,e){const m=String(e&&(e.name?e.name+': '+e.message:e)||'?').slice(0,200);toast(w+' ('+m.slice(0,70)+')');
+  rtCast('dbg',{w,m,ua:navigator.userAgent.slice(0,180)})}
+function lvPlay(a){const p=a.play();if(p&&p.catch)p.catch(()=>{if(!lvNeedTap){lvNeedTap=true;toast('Toca la pantalla para oír el audio');soft()}})}
+let lvJust=0;
+const lvUnlock=()=>{if(!lvNeedTap)return;lvNeedTap=false;lvJust=Date.now();document.querySelectorAll('audio').forEach(a=>{if(a.srcObject&&a.paused)lvPlay(a)});setTimeout(soft,300)};
+['touchend','pointerup','click'].forEach(ev=>document.addEventListener(ev,lvUnlock,true));
 
 // Emisor
 const LVA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -2411,7 +2423,7 @@ function vMus(M,ro){
     </div>`};
   return `<header class="bar"><button class="ic" data-a="back" aria-label="Volver">${I.back}</button>
     <div class="mid"><h1>Mus</h1><div class="tally" aria-label="Total de partidas entre estas parejas: ${h[0]} a ${h[1]}"><small>Total</small><b>${h[0]}</b><i>–</i><b>${h[1]}</b></div></div>
-    <span style="flex:1"></span>${ro?`<span class="lvbadge ${ro.st==='ok'?'':'off'}"><i></i>${ro.st==='ok'?'En directo':ro.st==='end'?'Terminada':'Reconectando…'}</span>${ro.mic?`<button class="ic lvaud" data-a="listen" aria-pressed="${!!ro.aud}" aria-label="${ro.aud?'Dejar de escuchar la mesa':'Escuchar la mesa'}">${ro.aud?I.spk:I.mute}</button>`:''}<button class="ic lvtalk ${ro.tm?'mut':''}" data-a="talk" aria-pressed="${!!ro.talk}" aria-label="${ro.talk?(ro.tm?'Te han silenciado. Tocar para cerrar tu micro':'Cerrar tu micro'):'Hablar con la mesa'}">${I.mic}</button>`:''}<button class="ic" data-a="swap" aria-pressed="${!!m.sw}" aria-label="Cambiar de lado las parejas">${I.swap}</button>${ro?'':`<button class="ic lvb" data-a="live" aria-pressed="${!!m.live}" aria-label="${m.live?'Emitiendo en directo: ver código':'Emitir la partida en directo'}">${I.live}${m.live?'<i class="lvdot"></i>':''}</button><button class="ic" data-a="askNew" aria-label="Nueva partida">${I.redo}</button>`}</header>
+    <span style="flex:1"></span>${ro?`<span class="lvbadge ${ro.st==='ok'?'':'off'}"><i></i>${ro.st==='ok'?'En directo':ro.st==='end'?'Terminada':'Reconectando…'}</span>${ro.mic?`<button class="ic lvaud ${lvNeedTap?'need':''}" data-a="listen" aria-pressed="${!!ro.aud}" aria-label="${ro.aud?'Dejar de escuchar la mesa':'Escuchar la mesa'}">${ro.aud?I.spk:I.mute}</button>`:''}<button class="ic lvtalk ${ro.tm?'mut':''}" data-a="talk" aria-pressed="${!!ro.talk}" aria-label="${ro.talk?(ro.tm?'Te han silenciado. Tocar para cerrar tu micro':'Cerrar tu micro'):'Hablar con la mesa'}">${I.mic}</button>`:''}<button class="ic" data-a="swap" aria-pressed="${!!m.sw}" aria-label="Cambiar de lado las parejas">${I.swap}</button>${ro?'':`<button class="ic lvb" data-a="live" aria-pressed="${!!m.live}" aria-label="${m.live?'Emitiendo en directo: ver código':'Emitir la partida en directo'}">${I.live}${m.live?'<i class="lvdot"></i>':''}</button><button class="ic" data-a="askNew" aria-label="Nueva partida">${I.redo}</button>`}</header>
    <div class="teams">${team(0)}${team(1)}</div>
    <section class="envs">${ENV.map(env).join('')}</section>
    ${ro?`<div class="pill histB lvlast" role="status" aria-live="polite">${esc(lvTxt(m,ro.x))}</div>${ro.w?`<div class="lvwin"><small>Partida terminada</small><b style="color:var(--${ro.w.t?'b':'a'})">¡Gana ${esc(ro.w.t?m.b:m.a)}!</b><span>${ro.w.pa} – ${ro.w.pb}${ro.w.o?' · por órdago':''}</span></div>`:''}`
@@ -3182,7 +3194,8 @@ const A={
   async talk(){if(lvTalking)talkOff();else await talkOn();buzz();render()},
   lvTmute(id){const t=lvTalk[id];if(!t)return;t.mute=!t.mute;if(t.el)t.el.muted=t.mute;rtCast('tmute',{to:id,on:t.mute?1:0});buzz();render()},
   async liveMic(){if(lvMic)micOff();else await micOn();buzz();lvSend(true);render()},
-  listen(){if(lvAud){audStop();toast('Audio apagado')}else{lvAud=true;lvEl().play().catch(()=>{});audAsk();toast('Conectando el audio…')}buzz();render()},
+  listen(){if(Date.now()-lvJust<800)return; // ese toque solo desbloqueó el audio del iPhone
+    if(lvAud){audStop();toast('Audio apagado')}else{lvAud=true;lvEl().play().catch(()=>{});audAsk();toast('Conectando el audio…')}buzz();render()},
   liveOff(){micOff();const m=S.mus;if(m)delete m.live;modal=null;buzz();commit();toast('Ya no se emite')},
   verAsk(){modal={type:'verAsk',d:{c:''}};render();setTimeout(()=>{const i=document.querySelector('.lvin');if(i)i.focus()},50)},
   verGo(){const raw=modal&&modal.d?modal.d.c:lgDraft.lv,c=String(raw||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -3447,7 +3460,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261122210943';
+const BUILD='20261122213206';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
