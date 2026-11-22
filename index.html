@@ -2233,7 +2233,7 @@ function rtPush(ev,payload){const w=RT.ws;if(!w||w.readyState!==1||!RT.want)retu
 const rtCast=(ev,p)=>{if(RT.ok)rtPush('broadcast',{type:'broadcast',event:ev,payload:p})};
 function rtConn(){const w=RT.want;if(!w||RT.ws)return;
   let ws;try{ws=new WebSocket(SB_URL.replace(/^http/,'ws')+'/realtime/v1/websocket?apikey='+encodeURIComponent(SB_KEY)+'&vsn=1.0.0')}catch(e){return}
-  RT.ws=ws;RT.ok=false;
+  RT.ws=ws;RT.ok=false;RT.ref=0; // el join va con ref "1": cada conexión nueva empieza la cuenta
   ws.onopen=()=>{if(RT.ws!==ws)return;rtPush('phx_join',{config:{broadcast:{self:false,ack:false},presence:{key:''},postgres_changes:[],private:false}});
     clearInterval(RT.hb);RT.hb=setInterval(()=>{if(ws.readyState===1)ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:String(++RT.ref)}))},25000)};
   ws.onmessage=e=>{if(RT.ws!==ws)return;let j;try{j=JSON.parse(e.data)}catch(_){return}
@@ -3388,7 +3388,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261122204700';
+const BUILD='20261122210048';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
