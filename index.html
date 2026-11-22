@@ -682,6 +682,25 @@ button.set:active{box-shadow:none}
 .xhor-why{font-size:11px;color:var(--muted);font-weight:400}
 .xhor-p{background:none;border:0;padding:4px 0;margin:0;font:inherit;color:var(--text);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .tr.th.xhor-gap{margin-top:14px}
+
+/* Partida en directo */
+.lvb{position:relative}.lvb .lvdot,.lvbadge i,.lvst i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--danger);animation:lvbl 1.4s ease-in-out infinite}
+.lvb .lvdot{position:absolute;top:5px;right:5px}
+@keyframes lvbl{50%{opacity:.25}}
+.lvbadge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--danger);white-space:nowrap;margin-right:6px}
+.lvbadge.off{color:var(--muted)}.lvbadge.off i{background:var(--muted);animation:none}
+.ro .bon,.ro .pm,.ro .give,.ro .env .s{visibility:hidden}.ro .tn{pointer-events:none}.ro .tn .rdice{display:none}
+.ro .score,.ro .env .num{pointer-events:none}
+.lvlast{display:flex;align-items:center;justify-content:center;max-width:min(92vw,520px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:default}
+.lvpop{animation:lvpop .5s ease-out}@keyframes lvpop{0%{transform:scale(1.12)}100%{transform:none}}
+.lvwin{position:fixed;inset:auto 16px 50%;transform:translateY(50%);z-index:30;display:grid;gap:4px;justify-items:center;text-align:center;padding:18px;border-radius:18px;background:var(--surface);color:var(--text);box-shadow:0 10px 40px rgba(0,0,0,.35);max-width:440px;margin:0 auto}
+.lvwin small{color:var(--muted)}.lvwin b{font-size:30px;line-height:1.1}.lvwin span{font-size:20px;font-weight:700}
+.lvcode{font:700 44px/1.1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.18em;text-align:center;margin:10px 0 4px;color:var(--accent);user-select:all}
+.lvst{text-align:center;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 8px}
+.lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
+.lvwait{text-align:center}
+.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
+.lvmic svg{width:18px;height:18px;margin-right:6px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <style id="sk-baraja" media="not all">/* ───────── Baraja española ───────── */
 :root{
@@ -1240,6 +1259,25 @@ button.score:active{background:var(--c-soft,var(--surface2))}
 .xhor-why{font-size:11px;color:var(--muted);font-weight:400}
 .xhor-p{background:none;border:0;padding:4px 0;margin:0;font:inherit;color:var(--text);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .tr.th.xhor-gap{margin-top:14px}
+
+/* Partida en directo */
+.lvb{position:relative}.lvb .lvdot,.lvbadge i,.lvst i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--danger);animation:lvbl 1.4s ease-in-out infinite}
+.lvb .lvdot{position:absolute;top:5px;right:5px}
+@keyframes lvbl{50%{opacity:.25}}
+.lvbadge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--danger);white-space:nowrap;margin-right:6px}
+.lvbadge.off{color:var(--muted)}.lvbadge.off i{background:var(--muted);animation:none}
+.ro .bon,.ro .pm,.ro .give,.ro .env .s{visibility:hidden}.ro .tn{pointer-events:none}.ro .tn .rdice{display:none}
+.ro .score,.ro .env .num{pointer-events:none}
+.lvlast{display:flex;align-items:center;justify-content:center;max-width:min(92vw,520px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:default}
+.lvpop{animation:lvpop .5s ease-out}@keyframes lvpop{0%{transform:scale(1.12)}100%{transform:none}}
+.lvwin{position:fixed;inset:auto 16px 50%;transform:translateY(50%);z-index:30;display:grid;gap:4px;justify-items:center;text-align:center;padding:18px;border-radius:18px;background:var(--surface);color:var(--text);box-shadow:0 10px 40px rgba(0,0,0,.35);max-width:440px;margin:0 auto}
+.lvwin small{color:var(--muted)}.lvwin b{font-size:30px;line-height:1.1}.lvwin span{font-size:20px;font-weight:700}
+.lvcode{font:700 44px/1.1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.18em;text-align:center;margin:10px 0 4px;color:var(--accent);user-select:all}
+.lvst{text-align:center;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 8px}
+.lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
+.lvwait{text-align:center}
+.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
+.lvmic svg{width:18px;height:18px;margin-right:6px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <style id="sk-glass" media="not all">/* ───────── Original cristal ───────── */
 :root{
@@ -1735,6 +1773,25 @@ button.score{color:var(--text)}
 .xhor-why{font-size:11px;color:var(--muted);font-weight:400}
 .xhor-p{background:none;border:0;padding:4px 0;margin:0;font:inherit;color:var(--text);cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .tr.th.xhor-gap{margin-top:14px}
+
+/* Partida en directo */
+.lvb{position:relative}.lvb .lvdot,.lvbadge i,.lvst i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--danger);animation:lvbl 1.4s ease-in-out infinite}
+.lvb .lvdot{position:absolute;top:5px;right:5px}
+@keyframes lvbl{50%{opacity:.25}}
+.lvbadge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--danger);white-space:nowrap;margin-right:6px}
+.lvbadge.off{color:var(--muted)}.lvbadge.off i{background:var(--muted);animation:none}
+.ro .bon,.ro .pm,.ro .give,.ro .env .s{visibility:hidden}.ro .tn{pointer-events:none}.ro .tn .rdice{display:none}
+.ro .score,.ro .env .num{pointer-events:none}
+.lvlast{display:flex;align-items:center;justify-content:center;max-width:min(92vw,520px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:default}
+.lvpop{animation:lvpop .5s ease-out}@keyframes lvpop{0%{transform:scale(1.12)}100%{transform:none}}
+.lvwin{position:fixed;inset:auto 16px 50%;transform:translateY(50%);z-index:30;display:grid;gap:4px;justify-items:center;text-align:center;padding:18px;border-radius:18px;background:var(--surface);color:var(--text);box-shadow:0 10px 40px rgba(0,0,0,.35);max-width:440px;margin:0 auto}
+.lvwin small{color:var(--muted)}.lvwin b{font-size:30px;line-height:1.1}.lvwin span{font-size:20px;font-weight:700}
+.lvcode{font:700 44px/1.1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.18em;text-align:center;margin:10px 0 4px;color:var(--accent);user-select:all}
+.lvst{text-align:center;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;margin:0 0 8px}
+.lvin{text-transform:uppercase;text-align:center;font-size:22px;letter-spacing:.15em}
+.lvwait{text-align:center}
+.lvaud{margin-right:6px}.lvaud[aria-pressed="true"]{color:var(--accent)}
+.lvmic svg{width:18px;height:18px;margin-right:6px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -1795,7 +1852,7 @@ function buzz(ms){if(S.settings.haptics&&navigator.vibrate)try{navigator.vibrate
 let toastT;function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2200)}
 
 /* ───────── Liga: sincronización ───────── */
-const lgDraft={name:'',code:'',lp:'',lk:''};
+const lgDraft={name:'',code:'',lp:'',lk:'',lv:''};
 let lockErr='',lockBusy=false,adminPin=null,trash=[]; // adminPin: solo en memoria, nunca se guarda
 let syncing=false,again=false,offline=false,busy=false;
 const pname=id=>(S.league.players.find(p=>p.id===id)||{name:'—'}).name;
@@ -2141,6 +2198,10 @@ const I={
   up:'<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>',
   dn:'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
   sort:'<svg viewBox="0 0 24 24"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>',
+  spk:'<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
+  mute:'<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg>',
+  mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
+  live:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>',
   dice:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 15h.01M15 9h.01M9 15h.01M12 12h.01"/></svg>'
 };
 const bar=(title,right='')=>`<header class="bar"><button class="ic" data-a="back" aria-label="Volver">${I.back}</button><h1>${esc(title)}</h1>${right}</header>`;
@@ -2153,15 +2214,131 @@ function vHome(){
   <section class="game"><h2>Mus</h2><p>Elige quién juega; la partida cuenta para la liga. Prohibido hacer señas.</p>
     ${m?`<div class="saved">${esc(m.a)} ${m.pa} – ${m.pb} ${esc(m.b)}</div>`:''}
     <div class="row">${m?`<button class="btn primary" data-a="go" data-p="mus">Continuar</button>`:''}
-    <button class="btn ${m?'ghost':'primary'}" data-a="setup">Nueva partida</button></div></section>
+    <button class="btn ${m?'ghost':'primary'}" data-a="setup">Nueva partida</button><button class="btn ghost" data-a="verAsk">Ver en directo</button></div></section>
   <section class="game"><h2>Liga</h2>
     <p>${L.players.length?`${L.players.length} jugadores · ${n} ${n===1?'partida':'partidas'}`:'Victorias y derrotas del grupo, compartidas entre todos los móviles. Aquí no hay dónde esconderse.'}</p>
     ${n&&st.players.length?`<div class="saved">Líder: ${esc(st.players[0].name)} (${st.players[0].g} ganadas)</div>`:''}
     <div class="row"><button class="btn ghost" data-a="go" data-p="liga">Ver liga</button></div></section>`;
 }
 
-function vMus(){
-  const m=S.mus,ses=m.ses||[0,0],h2=h2h(m),L=m.sw?1:0,R=1-L,h=[h2[L],h2[R]]; // L/R: equipo dibujado a izquierda/derecha
+/* ───────── Partida en directo ─────────
+   El móvil que lleva la partida emite cada cambio por un canal de Supabase Realtime (broadcast: no se guarda nada
+   en la base de datos). Quien tenga el código (o el enlace #ver=CÓDIGO) la ve en solo lectura, sin necesidad de
+   estar en la liga. Un solo WebSocket: o se emite o se mira. El estado va entero en cada mensaje, así el que llega
+   tarde o se reconecta lo tiene al momento (además pide "hi" al entrar y el emisor contesta). */
+const RT={ws:null,want:null,ok:false,ref:0,hb:0,retry:0,rt:0};
+const rtTopic=c=>'realtime:musete-'+c;
+function rtPush(ev,payload){const w=RT.ws;if(!w||w.readyState!==1||!RT.want)return;
+  w.send(JSON.stringify({topic:rtTopic(RT.want.code),event:ev,payload,ref:String(++RT.ref),join_ref:'1'}))}
+const rtCast=(ev,p)=>{if(RT.ok)rtPush('broadcast',{type:'broadcast',event:ev,payload:p})};
+function rtConn(){const w=RT.want;if(!w||RT.ws)return;
+  let ws;try{ws=new WebSocket(SB_URL.replace(/^http/,'ws')+'/realtime/v1/websocket?apikey='+encodeURIComponent(SB_KEY)+'&vsn=1.0.0')}catch(e){return}
+  RT.ws=ws;RT.ok=false;
+  ws.onopen=()=>{if(RT.ws!==ws)return;rtPush('phx_join',{config:{broadcast:{self:false,ack:false},presence:{key:''},postgres_changes:[],private:false}});
+    clearInterval(RT.hb);RT.hb=setInterval(()=>{if(ws.readyState===1)ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:String(++RT.ref)}))},25000)};
+  ws.onmessage=e=>{if(RT.ws!==ws)return;let j;try{j=JSON.parse(e.data)}catch(_){return}
+    if(!j||j.topic!==rtTopic(w.code))return;
+    if(j.event==='phx_reply'&&j.ref==='1'&&!RT.ok){RT.ok=j.payload&&j.payload.status==='ok';RT.retry=0;w.on(RT.ok?'_open':'_err');return}
+    if(j.event==='broadcast'&&j.payload)w.on(j.payload.event,j.payload.payload)};
+  ws.onclose=()=>{clearInterval(RT.hb);if(RT.ws!==ws)return;RT.ws=null;RT.ok=false;
+    if(RT.want===w){w.on('_close');clearTimeout(RT.rt);RT.rt=setTimeout(rtConn,Math.min(15000,1000*2**RT.retry++))}};
+  ws.onerror=()=>{try{ws.close()}catch(_){}};
+}
+function rtOpen(role,code,on){if(RT.want&&RT.want.role===role&&RT.want.code===code)return;rtClose();RT.want={role,code,on};RT.retry=0;rtConn()}
+function rtClose(){const ws=RT.ws;RT.want=null;RT.ws=null;RT.ok=false;clearInterval(RT.hb);clearTimeout(RT.rt);if(ws)try{ws.close()}catch(_){}}
+// al volver a primer plano (los móviles cortan el socket en segundo plano) se reconecta enseguida
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&RT.want&&!RT.ws){RT.retry=0;rtConn()}});
+
+// Texto del último movimiento (lo ven los espectadores)
+function lvTxt(m,x){if(!x)return 'Esperando la primera jugada';const tn=x.t?m.b:m.a,E=ENV[x.i]||'',v=x.v|0;
+  return x.k==='p'?`${x.n>0?'+':''}${x.n} para ${tn}`:x.k==='b'?`${(BON[x.i]||['Jugada'])[0]}: +${x.n} para ${tn}`
+    :x.k==='g'?`${E}: +${v} para ${tn}`:x.k==='z'?`${E} en paso: +1 para ${tn}`:x.k==='n'?`Órdago no querido: +${v} para ${tn}`
+    :x.k==='e'?(v?`${E}: ${v} en juego`:`${E}: envite retirado`):x.k==='o'?'¡Órdago!':''}
+
+/* Audio: el emisor abre el micro y crea una conexión WebRTC por cada espectador que pide escuchar ("ask").
+   Oferta y respuesta viajan por el canal (sin trickle: se espera a reunir los candidatos ICE). Solo STUN público:
+   en alguna red móvil muy cerrada puede no conectar. Máx. 10 oyentes. */
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]};
+const iceDone=pc=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,2500);
+  pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r()}})});
+let lvMic=null;const lvPcs={};
+const micN=()=>Object.values(lvPcs).filter(pc=>pc.connectionState==='connected').length;
+function pcDrop(id){const pc=lvPcs[id];delete lvPcs[id];if(pc)try{pc.close()}catch(_){}}
+async function micOn(){if(window.MuseteNative){toast('En la app no hay permiso de micro: abre Musete en el navegador para emitir audio');return}
+  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast('Este móvil no deja usar el micro aquí');return}
+  try{lvMic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false})}
+  catch(e){lvMic=null;toast('Sin permiso para usar el micro')}}
+function micOff(){Object.keys(lvPcs).forEach(pcDrop);if(lvMic){lvMic.getTracks().forEach(t=>t.stop());lvMic=null}}
+async function micOffer(id){if(!lvMic||typeof id!=='string'||!/^[a-z0-9]{6,16}$/.test(id))return;pcDrop(id);if(Object.keys(lvPcs).length>=10)return;
+  const pc=new RTCPeerConnection(ICE);lvPcs[id]=pc;lvMic.getTracks().forEach(t=>pc.addTrack(t,lvMic));
+  pc.onconnectionstatechange=()=>{if(['failed','closed'].includes(pc.connectionState)&&lvPcs[id]===pc)pcDrop(id);if(modal&&modal.type==='live')soft()};
+  try{await pc.setLocalDescription(await pc.createOffer());await iceDone(pc);if(lvPcs[id]===pc)rtCast('sdp',{to:id,d:pc.localDescription.sdp})}catch(e){pcDrop(id)}}
+async function micAns(p){const pc=p&&lvPcs[p.from];if(!pc||typeof p.d!=='string')return;
+  try{await pc.setRemoteDescription({type:'answer',sdp:p.d})}catch(e){pcDrop(p.from)}}
+// Espectador: escucha solo tras tocar el altavoz (los navegadores no dejan sonar sin un toque)
+const lvMe=Math.random().toString(36).slice(2,12);
+let vpc=null,lvAud=false,lvAudT=0;
+const lvEl=()=>{let a=document.getElementById('lvaudio');if(!a){a=document.createElement('audio');a.id='lvaudio';a.autoplay=true;a.setAttribute('playsinline','');document.body.appendChild(a)}return a};
+function audStop(){lvAud=false;clearTimeout(lvAudT);if(vpc)try{vpc.close()}catch(_){}vpc=null;const a=document.getElementById('lvaudio');if(a){a.pause();a.srcObject=null}}
+const audAsk=()=>{if(lvAud&&RT.ok)rtCast('ask',{id:lvMe})};
+async function audOffer(p){if(!lvAud||!p||p.to!==lvMe||typeof p.d!=='string')return;
+  if(vpc)try{vpc.close()}catch(_){}
+  const pc=vpc=new RTCPeerConnection(ICE);
+  pc.ontrack=e=>{const a=lvEl();a.srcObject=e.streams[0]||new MediaStream([e.track]);a.play().catch(()=>toast('Toca el altavoz para oír la mesa'));toast('Escuchando la mesa')};
+  pc.onconnectionstatechange=()=>{if(vpc!==pc)return;if(pc.connectionState==='failed'){toast('No se pudo conectar el audio. Reintentando…');clearTimeout(lvAudT);lvAudT=setTimeout(audAsk,4000)}};
+  try{await pc.setRemoteDescription({type:'offer',sdp:p.d});await pc.setLocalDescription(await pc.createAnswer());await iceDone(pc);
+    if(vpc===pc)rtCast('ans',{from:lvMe,d:pc.localDescription.sdp})}catch(e){toast('No se pudo conectar el audio')}}
+
+// Emisor
+const LVA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const lvCode=()=>{const r=new Uint8Array(5);crypto.getRandomValues(r);return [...r].map(x=>LVA[x%LVA.length]).join('')};
+const lvUrl=c=>location.origin+location.pathname+'#ver='+c;
+let lvLast='',lvT=0,lvBeat=0;
+function lvSnap(){const m=S.mus,l=m.log||[],x=l[l.length-1],w=modal&&modal.type==='win'?{t:modal.t,pa:modal.pa,pb:modal.pb,o:modal.o?1:0}:null;
+  return {a:m.a,b:m.b,pa:m.pa,pb:m.pb,env:m.env,ses:m.ses||[0,0],h:h2h(m),mic:lvMic?1:0,x:x?{k:x.k,t:x.t,i:x.i,v:x.v,n:x.n,dt:x.dt}:null,w}}
+function lvSend(force){if(!RT.ok||!S.mus||!S.mus.live)return;const j=JSON.stringify(lvSnap());if(!force&&j===lvLast)return;lvLast=j;rtCast('s',JSON.parse(j))}
+const lvTx=(ev,p)=>{if(ev==='ask')micOffer(p&&p.id);if(ev==='ans')micAns(p);if(ev==='_open'||ev==='hi')lvSend(true);if(ev==='_open'||ev==='_close'||ev==='_err')soft()};
+
+// Espectador
+const lv={code:'',s:null,st:'conn',sw:0,dt:null};
+const lvRx=(ev,p)=>{
+  if(ev==='_open'){lv.st='ok';rtCast('hi',{});audAsk();soft();return}
+  if(ev==='sdp'){audOffer(p);return}
+  if(ev==='_close'||ev==='_err'){if(lv.st!=='end')lv.st='off';soft();return}
+  if(ev==='end'){lv.st='end';soft();return}
+  if(ev!=='s'||!p||typeof p!=='object')return;
+  const ok=typeof p.a==='string'&&typeof p.b==='string'&&Number.isFinite(p.pa)&&Number.isFinite(p.pb)&&Array.isArray(p.env)&&p.env.length===4;if(!ok)return;
+  const nx=p.x&&p.x.dt,prev=lv.s,chg=prev&&(prev.pa!==p.pa?0:prev.pb!==p.pb?1:-1);
+  lv.s=p;lv.st='ok';
+  if(lvAud&&p.mic&&!(prev&&prev.mic))audAsk(); // el micro se ha vuelto a encender
+  if(!p.mic&&vpc){try{vpc.close()}catch(_){}vpc=null}
+  soft();
+  if(nx!=null&&nx!==lv.dt){lv.dt=nx;requestAnimationFrame(()=>{
+    const pop=el=>{if(!el)return;el.classList.remove('lvpop');void el.offsetWidth;el.classList.add('lvpop')};
+    pop(document.querySelector('.lvlast'));if(chg>=0)pop(document.querySelector('.team.t'+chg+' .score'));buzz(10)})}
+};
+const verCode=()=>{const h=location.hash.slice(1),m=h.match(/^ver=?([A-Za-z0-9]{4,8})$/);return m?m[1].toUpperCase():''};
+function vVer(){const c=verCode(),s=lv.s;
+  if(s&&lv.code===c){const m={a:s.a,b:s.b,pa:s.pa,pb:s.pb,env:s.env,ses:Array.isArray(s.ses)?s.ses:[0,0],sw:lv.sw};
+    return vMus(m,{h:Array.isArray(s.h)?s.h:[0,0],x:s.x,w:s.w,st:lv.st,mic:!!s.mic,aud:lvAud})}
+  return bar('En directo')+`<section class="card lvwait"><h2>Mesa ${esc(c)}</h2>
+    <p>${lv.st==='end'?'La partida ha terminado.':lv.st==='off'?'Sin conexión. Reintentando…':'Esperando a la mesa…'}</p>
+    <p class="hint">Si tarda, comprueba el código: el móvil que lleva la partida tiene que estar emitiendo (botón de la antena).</p></section>`;
+}
+// Quién habla por el socket: en #ver se mira; si no, se emite si la partida tiene código de directo
+function liveSync(){const c=verCode();
+  if(c){if(lv.code!==c){lv.code=c;lv.s=null;lv.st='conn';lv.dt=null}rtOpen('rx',c,lvRx);return}
+  if(lv.code||lvAud)audStop();
+  lv.code='';lv.s=null;
+  const m=S.mus;
+  if(m&&m.live){rtOpen('tx',m.live,lvTx);clearTimeout(lvT);lvT=setTimeout(()=>lvSend(),80);
+    if(!lvBeat)lvBeat=setInterval(()=>lvSend(true),20000);return}
+  clearInterval(lvBeat);lvBeat=0;if(lvMic)micOff();
+  if(RT.want&&RT.want.role==='tx'){rtCast('end',{});const w=RT.ws;RT.ws=null;RT.want=null;RT.ok=false;clearInterval(RT.hb);clearTimeout(RT.rt);if(w)setTimeout(()=>{try{w.close()}catch(_){}},300)}
+  else if(RT.want)rtClose();
+}
+function vMus(M,ro){
+  const m=M||S.mus,ses=m.ses||[0,0],h2=ro?ro.h||[0,0]:h2h(m),L=m.sw?1:0,R=1-L,h=[h2[L],h2[R]]; // L/R: equipo dibujado a izquierda/derecha
   const team=t=>{const p=t?m.pb:m.pa,n=esc(t?m.b:m.a);
     return `<section class="team t${t}${m.sw?' swp':''}">
       <div class="tname" aria-label="${n}: ${ses[t]} ganadas en esta sesión"><button class="tn" data-a="rename" data-p="${t}" aria-label="${n}. Tocar para otro nombre"><i class="rdice">${I.dice}</i><span>${n}</span></button><b class="ses" title="Ganadas en esta sesión">${ses[t]}</b></div>
@@ -2181,12 +2358,13 @@ function vMus(){
     </div>`};
   return `<header class="bar"><button class="ic" data-a="back" aria-label="Volver">${I.back}</button>
     <div class="mid"><h1>Mus</h1><div class="tally" aria-label="Total de partidas entre estas parejas: ${h[0]} a ${h[1]}"><small>Total</small><b>${h[0]}</b><i>–</i><b>${h[1]}</b></div></div>
-    <span style="flex:1"></span><button class="ic" data-a="swap" aria-pressed="${!!m.sw}" aria-label="Cambiar de lado las parejas">${I.swap}</button><button class="ic" data-a="askNew" aria-label="Nueva partida">${I.redo}</button></header>
+    <span style="flex:1"></span>${ro?`<span class="lvbadge ${ro.st==='ok'?'':'off'}"><i></i>${ro.st==='ok'?'En directo':ro.st==='end'?'Terminada':'Reconectando…'}</span>${ro.mic?`<button class="ic lvaud" data-a="listen" aria-pressed="${!!ro.aud}" aria-label="${ro.aud?'Dejar de escuchar la mesa':'Escuchar la mesa'}">${ro.aud?I.spk:I.mute}</button>`:''}`:''}<button class="ic" data-a="swap" aria-pressed="${!!m.sw}" aria-label="Cambiar de lado las parejas">${I.swap}</button>${ro?'':`<button class="ic lvb" data-a="live" aria-pressed="${!!m.live}" aria-label="${m.live?'Emitiendo en directo: ver código':'Emitir la partida en directo'}">${I.live}${m.live?'<i class="lvdot"></i>':''}</button><button class="ic" data-a="askNew" aria-label="Nueva partida">${I.redo}</button>`}</header>
    <div class="teams">${team(0)}${team(1)}</div>
    <section class="envs">${ENV.map(env).join('')}</section>
-   <button class="ic undoB" data-a="undo" ${undo.mus.length?'':'disabled'} aria-label="Deshacer">${I.undo}</button>
+   ${ro?`<div class="pill histB lvlast" role="status" aria-live="polite">${esc(lvTxt(m,ro.x))}</div>${ro.w?`<div class="lvwin"><small>Partida terminada</small><b style="color:var(--${ro.w.t?'b':'a'})">¡Gana ${esc(ro.w.t?m.b:m.a)}!</b><span>${ro.w.pa} – ${ro.w.pb}${ro.w.o?' · por órdago':''}</span></div>`:''}`
+   :`<button class="ic undoB" data-a="undo" ${undo.mus.length?'':'disabled'} aria-label="Deshacer">${I.undo}</button>
    <button class="pill histB" data-a="hist">Historial</button>
-   <button class="pill ordago" data-a="ordago">Órdago</button>`;
+   <button class="pill ordago" data-a="ordago">Órdago</button>`}`;
 }
 
 // Fila de una partida (lista de la liga y pantalla de todas las partidas)
@@ -2637,7 +2815,10 @@ function vLock(){
   <section class="game"><h2>Liga privada</h2><p>Escribe el código de la liga para entrar. Y no, no vale preguntárselo al vecino.</p>
     <label class="field"><span>Código de la liga</span><input data-g="lk" data-enter="enterLeague" value="${esc(lgDraft.lk)}" style="text-transform:uppercase" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Código de la liga"></label>
     ${lockErr?`<p class="hint" role="alert" style="color:var(--danger)">${esc(lockErr)}</p>`:''}
-    <div class="row"><button class="btn primary" data-a="enterLeague" ${lockBusy?'disabled':''}>${lockBusy?'Comprobando…':'Entrar'}</button></div></section>`;
+    <div class="row"><button class="btn primary" data-a="enterLeague" ${lockBusy?'disabled':''}>${lockBusy?'Comprobando…':'Entrar'}</button></div></section>
+  <section class="game"><h2>Ver una partida en directo</h2><p>¿Te han pasado el código de una mesa? Mírala sin tocar nada.</p>
+    <label class="field"><span>Código de la mesa</span><input data-g="lv" data-enter="verGo" value="${esc(lgDraft.lv)}" style="text-transform:uppercase" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Código de la mesa"></label>
+    <div class="row"><button class="btn ghost" data-a="verGo">Ver</button></div></section>`;
 }
 function vSettings(){
   const st=S.settings;
@@ -2706,6 +2887,17 @@ function vModal(){
       <div class="fic"><span class="olab">Mano en la revancha</span>${ids.map(id=>ch('manoNext',id,s.mano===id,esc(pname(id)))).join('')}</div>`})():''}
     <div class="row"><button class="btn ghost" data-a="undo">Deshacer</button><button class="btn primary" data-a="rematch">Revancha</button></div>
     <div class="row"><button class="btn ghost" data-a="endGame">Terminar</button></div>`;
+  }else if(m.type==='live'){const c=S.mus&&S.mus.live;if(!c){modal=null;return ''}
+    h=`<h2>En directo</h2><p class="hint">Quien tenga este código ve la partida al momento, sin poder tocar nada. No hace falta que esté en la liga.</p>
+    <div class="lvcode" aria-label="Código ${c.split('').join(' ')}">${c}</div>
+    <p class="lvst">${RT.ok?'<i></i>Emitiendo':'Conectando…'}</p>
+    <div class="row"><button class="btn primary" data-a="liveShare">Compartir enlace</button><button class="btn ${lvMic?'primary':'ghost'} lvmic" data-a="liveMic" aria-pressed="${!!lvMic}">${I.mic}${lvMic?'Apagar micro':'Abrir micro'}</button></div>
+    ${lvMic?`<p class="lvst">${micN()?`${micN()} ${micN()===1?'persona escucha':'personas escuchan'}`:'Micro abierto: nadie escuchando todavía'}</p>`:'<p class="hint" style="text-align:center">Con el micro abierto, quien mire puede oír la mesa.</p>'}
+    <div class="row"><button class="btn ghost" data-a="liveOff">Dejar de emitir</button><button class="btn ghost" data-a="close">Cerrar</button></div>`;
+  }else if(m.type==='verAsk'){
+    h=`<h2>Ver en directo</h2><p class="hint">Escribe el código que sale en el móvil de la mesa (botón de la antena).</p>
+    <input class="search lvin" data-k="c" data-enter="verGo" value="${esc(m.d.c||'')}" placeholder="Código" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Código de la mesa">
+    <div class="row"><button class="btn ghost" data-a="close">Cancelar</button><button class="btn primary" data-a="verGo">Ver</button></div>`;
   }else if(m.type==='hist'){const s=S.mus,log=(s.log||[]).filter(x=>x.k!=='e'&&x.k!=='o').reverse(); // los envites van al log solo para estadísticas
     h=`<h2>Historial</h2><p>Movimientos de esta partida, del más reciente al más antiguo.</p>
     ${log.length?log.map(x=>`<div class="hrow"><span class="hw">${esc(x.t?s.b:s.a)}</span>
@@ -2923,9 +3115,20 @@ const A={
   manoSel(id){const d=modal&&modal.d;if(!d)return;d.mano=d.mano===id?null:id;buzz();render()}, // mano al empezar (diálogo de nueva partida)
   undo(){if(!undo.mus.length)return;const prev=JSON.parse(undo.mus.pop()),rec=S.mus.recId;
     prev.sw=S.mus.sw; // cambiar de lado no se deshace
+    if(S.mus.live)prev.live=S.mus.live;else delete prev.live; // emitir en directo tampoco
     S.mus=prev;modal=null;buzz();whoHide();
     if(rec&&prev.recId!==rec)dropMatch(rec); // se deshace el final de una partida de liga
     commit()},
+  live(){const m=S.mus;if(!m)return;if(!m.live){m.live=lvCode();save();toast('Emitiendo en directo')}modal={type:'live'};buzz();render()},
+  liveShare(){const c=S.mus&&S.mus.live;if(!c)return;const url=lvUrl(c),text=`Mira la partida de mus en directo (código ${c})`;
+    if(navigator.share)navigator.share({title:'Musete en directo',text,url}).catch(()=>{});
+    else if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado'),()=>toast(url));else toast(url)},
+  async liveMic(){if(lvMic)micOff();else await micOn();buzz();lvSend(true);render()},
+  listen(){if(lvAud){audStop();toast('Audio apagado')}else{lvAud=true;lvEl().play().catch(()=>{});audAsk();toast('Conectando el audio…')}buzz();render()},
+  liveOff(){micOff();const m=S.mus;if(m)delete m.live;modal=null;buzz();commit();toast('Ya no se emite')},
+  verAsk(){modal={type:'verAsk',d:{c:''}};render();setTimeout(()=>{const i=document.querySelector('.lvin');if(i)i.focus()},50)},
+  verGo(){const raw=modal&&modal.d?modal.d.c:lgDraft.lv,c=String(raw||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+    if(c.length<4){toast('Código no válido');return}modal=null;lgDraft.lv='';depth++;location.hash='ver='+c},
   askNew(){modal={type:'confirm',title:'¿Nueva partida?',text:'Se perderá la partida actual.',yes:'Nueva partida',ok:'setup'};render()},
   endGame(){S.mus=null;undo.mus=[];modal=null;save();back();upNow()},
   // liga
@@ -2959,6 +3162,8 @@ Object.assign(A,{
     adminDo('Renombrar mote','league_title_set',{p_key:a[0],p_name:n},()=>{toast(n?'Mote renombrado':'Nombre restaurado');sync()})}
 });
 function run(a,p){
+  if(verCode()&&!['back','go','swap','close','verAsk','verGo','listen'].includes(a))return;
+  if(a==='swap'&&verCode()){lv.sw=lv.sw?0:1;buzz();render();return}
   const args=p===undefined||p===''?[]:String(p).split(',').map(x=>x!==''&&!isNaN(x)?Number(x):x);
   if(A[a])A[a](...args);
 }
@@ -3101,16 +3306,17 @@ function patchEl(o,n){
   patchKids(o,n);
 }
 function render(){
-  const locked=!S.code,v=locked?'lock':view(),st=S.settings;
+  const ver=!!verCode(),locked=!S.code&&!ver,v=ver?'ver':locked?'lock':view(),st=S.settings;
   if(st.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=st.theme;
   const sk=SKIN();for(const k of SKINS)document.getElementById('sk-'+k).media=sk===k?'all':'not all';
   paint();
-  const html=locked?vLock():v==='mus'?vMus():v==='settings'?vSettings():v==='liga'?vLiga():v==='partidas'?vMatches():vHome();
+  liveSync();
+  const html=ver?vVer():locked?vLock():v==='mus'?vMus():v==='settings'?vSettings():v==='liga'?vLiga():v==='partidas'?vMatches():vHome();
   const app=document.getElementById('app');
-  app.className='v-'+(['mus','settings','liga','partidas'].includes(v)?v:'home');
-  landscape(v==='mus');
+  app.className=ver?(lv.s?'v-mus ro':'v-home'):'v-'+(['mus','settings','liga','partidas'].includes(v)?v:'home');
+  landscape(v==='mus'||(ver&&!!lv.s));
   patch(app,html);
-  patch(document.getElementById('modal'),locked?'':vModal());
+  patch(document.getElementById('modal'),locked||ver?'':vModal());
   document.querySelector('meta[name=theme-color]').content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
   wake();
 }
@@ -3152,7 +3358,7 @@ addEventListener('online',sync);
 /* pantalla encendida */
 let wl=null;
 async function wake(){
-  const want=S.code&&S.settings.keepOn&&view()==='mus'&&document.visibilityState==='visible';
+  const want=S.settings.keepOn&&(S.code&&view()==='mus'||verCode()&&lv.s)&&document.visibilityState==='visible';
   try{
     if(want&&!wl&&navigator.wakeLock){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null})}
     else if(!want&&wl){const w=wl;wl=null;await w.release()}
@@ -3182,7 +3388,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261121142701';
+const BUILD='20261122204700';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
