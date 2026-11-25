@@ -1808,6 +1808,123 @@ button.score{color:var(--text)}
 .lvtr input[type=range]{width:100%;accent-color:var(--accent)}.lvtr.mut b{color:var(--muted);text-decoration:line-through}
 .lvtr .ic svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
+<style id="sk-vice" media="not all">/* ───────── Miami: atardecer neón, palmeras y letras gordas. Va encima de Cristal ───────── */
+:root{
+  --bg:#140a24;--surface:#241237;--surface2:#3a1a52;--line:#62307a;
+  --text:#fff2f8;--muted:#c99cc4;--accent:#ff3d9a;--on-accent:#1c0016;
+  --a:#ff3d9a;--a-soft:rgba(255,61,154,.16);--b:#22d3e6;--b-soft:rgba(34,211,230,.15);
+  --danger:#ff6464;--ok:#3cf0a0;--warn:#ffb03a;--shadow:0 12px 34px rgba(10,0,20,.6);
+  --display:"Arial Black","Segoe UI Black",Impact,system-ui,sans-serif;
+  --sun:linear-gradient(90deg,#ff3d9a,#ff7a45 55%,#ffc145);
+  --gal:62%;--gal2:55%;--edge:rgba(255,120,200,.22);--blur:blur(16px) saturate(1.6)}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#fff0e4;--surface:#ffffff;--surface2:#ffe1ec;--line:#f0b3c8;
+  --text:#2b0a30;--muted:#8c5b7c;--accent:#e01477;--on-accent:#fff;
+  --a:#e01477;--a-soft:rgba(224,20,119,.12);--b:#0a8ea0;--b-soft:rgba(10,142,160,.12);
+  --danger:#c8202a;--ok:#0a8a5a;--warn:#c86a00;--shadow:0 10px 30px rgba(120,20,70,.18);
+  --edge:rgba(200,40,120,.2);--gal:70%;--gal2:66%}}
+:root[data-theme=light]{
+  --bg:#fff0e4;--surface:#ffffff;--surface2:#ffe1ec;--line:#f0b3c8;
+  --text:#2b0a30;--muted:#8c5b7c;--accent:#e01477;--on-accent:#fff;
+  --a:#e01477;--a-soft:rgba(224,20,119,.12);--b:#0a8ea0;--b-soft:rgba(10,142,160,.12);
+  --danger:#c8202a;--ok:#0a8a5a;--warn:#c86a00;--shadow:0 10px 30px rgba(120,20,70,.18);
+  --edge:rgba(200,40,120,.2);--gal:70%;--gal2:66%}
+/* cielo de atardecer: sol abajo, cielo violeta arriba, rayas de horizonte */
+body{background:
+  radial-gradient(60vmax 38vmax at 50% 108%,rgba(255,170,70,.55),rgba(255,61,154,.28) 45%,transparent 72%),
+  repeating-linear-gradient(0deg,transparent 0 22px,color-mix(in srgb,var(--bg) 55%,transparent) 22px 26px),
+  linear-gradient(180deg,color-mix(in srgb,#6a1fa0 35%,var(--bg)) 0%,var(--bg) 45%,color-mix(in srgb,#ff3d9a 22%,var(--bg)) 100%) fixed}
+:root[data-theme=light] body{background:radial-gradient(60vmax 38vmax at 50% 110%,rgba(255,160,80,.45),rgba(255,61,154,.18) 50%,transparent 75%),
+  linear-gradient(180deg,#ffd9ec 0%,var(--bg) 50%,#ffe2c4 100%) fixed}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]) body{background:radial-gradient(60vmax 38vmax at 50% 110%,rgba(255,160,80,.45),rgba(255,61,154,.18) 50%,transparent 75%),
+  linear-gradient(180deg,#ffd9ec 0%,var(--bg) 50%,#ffe2c4 100%) fixed}}
+/* letras de cartel: gordas, inclinadas, con degradado de atardecer */
+.hero .logo,.win .big,.lg h2,.game h2,.sheet h2{font-family:var(--display);font-style:italic;text-transform:uppercase;letter-spacing:.01em}
+.hero .logo,.win .big{background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3px 0 rgba(40,0,50,.55))}
+.hero .logo i{color:transparent}
+.bar h1{font-style:italic;text-transform:uppercase;font-family:var(--display);font-size:18px}
+.game,.card,.set,.sheet{border-color:var(--edge)}
+.game{border-radius:22px;position:relative;overflow:hidden}
+.game::after{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--sun)}
+.btn.primary{background:var(--sun);color:#1c0016;font-family:var(--display);font-style:italic;text-transform:uppercase;letter-spacing:.02em;
+  box-shadow:0 6px 20px rgba(255,61,154,.4),inset 0 1px 0 rgba(255,255,255,.35)}
+.seg button.on,.qp.on,.fbtn.on,.sw.on{background:var(--sun);color:#1c0016}
+/* marcador con brillo de neón */
+button.score{font-family:var(--display);font-style:italic;color:var(--text);text-shadow:0 0 18px color-mix(in srgb,var(--c,var(--accent)) 70%,transparent),0 0 2px var(--c,var(--accent))}
+.tname{font-family:var(--display);font-style:italic;text-transform:uppercase}
+.v-mus .team{border-radius:22px;border-width:1.5px}
+.pm .plus{box-shadow:0 0 22px color-mix(in srgb,var(--c) 60%,transparent)}
+.ordago{font-family:var(--display);font-style:italic;text-transform:uppercase;letter-spacing:.04em}
+#toast{background:var(--sun);color:#1c0016;font-style:italic}
+.lvcode{background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+<style id="sk-chat" media="not all">/* ───────── Chat: como una app de mensajería. Va encima de Cristal, sin vidrio ───────── */
+:root{
+  --bg:#0b141a;--surface:#1f2c34;--surface2:#2a3942;--line:#2f3f49;
+  --text:#e9edef;--muted:#8696a0;--accent:#00a884;--on-accent:#06130f;
+  --a:#00a884;--a-soft:rgba(0,168,132,.16);--b:#53bdeb;--b-soft:rgba(83,189,235,.15);
+  --danger:#f15c6d;--ok:#25d366;--warn:#ffd279;--shadow:0 2px 10px rgba(0,0,0,.45);
+  --ui:"Segoe UI","Helvetica Neue",Helvetica,system-ui,-apple-system,sans-serif;--display:var(--ui);
+  --bub:#005c4b;--head:#202c33;--doodle:rgba(255,255,255,.035);
+  --gal:100%;--gal2:100%;--edge:transparent;--shine:none;--blur:none}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#efeae2;--surface:#ffffff;--surface2:#f0f2f5;--line:#e1e5e8;
+  --text:#111b21;--muted:#667781;--accent:#008069;--on-accent:#fff;
+  --a:#008069;--a-soft:rgba(0,128,105,.12);--b:#027eb5;--b-soft:rgba(2,126,181,.12);
+  --danger:#d42e45;--ok:#1fa855;--warn:#b27b00;--shadow:0 1px 2px rgba(11,20,26,.13);
+  --bub:#d9fdd3;--head:#008069;--doodle:rgba(0,0,0,.045);--gal:100%;--gal2:100%;--shine:none}}
+:root[data-theme=light]{
+  --bg:#efeae2;--surface:#ffffff;--surface2:#f0f2f5;--line:#e1e5e8;
+  --text:#111b21;--muted:#667781;--accent:#008069;--on-accent:#fff;
+  --a:#008069;--a-soft:rgba(0,128,105,.12);--b:#027eb5;--b-soft:rgba(2,126,181,.12);
+  --danger:#d42e45;--ok:#1fa855;--warn:#b27b00;--shadow:0 1px 2px rgba(11,20,26,.13);
+  --bub:#d9fdd3;--head:#008069;--doodle:rgba(0,0,0,.045);--gal:100%;--gal2:100%;--shine:none}
+/* fondo de chat con garabatos suaves (cartas y fichas) */
+body{background-color:var(--bg);background-image:
+  radial-gradient(circle at 20px 20px,var(--doodle) 0 5px,transparent 6px),
+  radial-gradient(circle at 70px 60px,transparent 0 7px,var(--doodle) 8px 9px,transparent 10px),
+  linear-gradient(45deg,transparent 46%,var(--doodle) 47% 53%,transparent 54%);
+  background-size:96px 96px,96px 96px,48px 48px;background-attachment:fixed}
+/* sin vidrio: superficies lisas */
+.game,.card,.set,.sheet,.fpanel,.bar .ic,.v-mus .team,.v-mus .envs,.fbar,#toast,#who,.overlay{-webkit-backdrop-filter:none;backdrop-filter:none}
+/* tarjetas como burbujas de mensaje con piquito */
+.game,.card{border:0;border-radius:0 12px 12px 12px;box-shadow:var(--shadow);position:relative;margin-left:8px}
+.game::before,.card::before{content:"";position:absolute;top:0;left:-8px;border-style:solid;border-width:0 8px 10px 0;border-color:transparent var(--surface) transparent transparent}
+.game:nth-of-type(even){background:var(--bub);border-radius:12px 0 12px 12px;margin:0 8px 12px 0}
+.game:nth-of-type(even) p,.v-mus .team.t1 .bon button{color:color-mix(in srgb,var(--text) 72%,transparent)}
+.game:nth-of-type(even)::before{left:auto;right:-8px;border-width:0 0 10px 8px;border-color:transparent transparent transparent var(--bub)}
+.set{border:0;border-radius:10px;box-shadow:var(--shadow)}
+.sheet{border-radius:16px 16px 0 0;border:0}
+.sheet::before{background:var(--line)}
+/* botones: verde redondo */
+.btn{border-radius:99px;background:var(--surface2);box-shadow:none}
+.btn.primary{background:var(--accent);color:var(--on-accent);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.btn.ghost{box-shadow:inset 0 0 0 1px var(--line)}
+.chip,.qp,.fbtn,.pill,.bon button,.pc,.seg,.sw,.give,.tally,.undoB,.pm .minus,.tname .ses{box-shadow:none;background:var(--surface2)}
+.seg{border-radius:99px}.seg button{border-radius:99px}
+.tcard,.slot,.pairname{box-shadow:none;border-radius:4px 12px 12px 4px}
+.prow,.tr,.match,.kv,.aw,.hrow{border-top-color:var(--line)}
+/* cabecera tipo conversación */
+.bar h1{font-weight:500}
+.bar .ic{background:transparent;border:0}
+.hero .logo{font-weight:700;color:var(--text)}
+.hero .logo i{color:var(--accent)}
+/* toast y "¿de quién?" como burbuja de mensaje entrante */
+#toast{background:var(--bub);color:var(--text);border-radius:8px 8px 8px 2px;box-shadow:var(--shadow)}
+#who{background:var(--surface);box-shadow:var(--shadow)}
+/* partida: cada pareja en su burbuja, la derecha "enviada" */
+.v-mus .team{border:0;border-radius:0 18px 18px 18px;background:var(--surface);box-shadow:var(--shadow)}
+.v-mus .team.t1{border-radius:18px 0 18px 18px;background:var(--bub)}
+.v-mus .team.t1 .tname{color:var(--text)}
+.v-mus .team.t1.swp{border-radius:0 18px 18px 18px}.v-mus .team.t0.swp{border-radius:18px 0 18px 18px}
+.v-mus .envs{border:0;border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.pm .plus{box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.ordago{color:var(--on-accent);background:var(--accent);box-shadow:none}
+.tg{color:var(--accent)}
+/* doble check azul en las victorias */
+.match b.w::after{content:" ✓✓";color:var(--b);font-size:.8em;letter-spacing:-.2em}
+</style>
 </head>
 <body>
 <div id="root"><div id="app"></div><div id="modal"></div><div id="toast" role="status"></div><div id="who" role="status"></div></div>
@@ -2892,7 +3009,7 @@ function vSettings(){
   sw('keepOn','Pantalla siempre encendida','Mientras hay una partida abierta: que no se apague en pleno órdago')+
   sw('haptics','Vibración','Al pulsar botones (un zumbidito de nada)')+
   `<div class="set"><span>Tema</span><div class="seg">${[['auto','Auto'],['light','Claro'],['dark','Oscuro']].map(([v,l])=>`<button class="${st.theme===v?'on':''}" data-a="theme" data-p="${v}">${l}</button>`).join('')}</div></div>
-  <div class="set"><span>Estilo</span><div class="seg">${[['neon','Neón'],['glass','Cristal'],['baraja','Baraja']].map(([v,l])=>`<button class="${SKIN()===v?'on':''}" data-a="skin" data-p="${v}" aria-pressed="${SKIN()===v}">${l}</button>`).join('')}</div></div>
+  <div class="set" style="flex-wrap:wrap"><span>Estilo</span><div class="seg" style="flex-wrap:wrap;width:100%">${[['neon','Neón'],['glass','Cristal'],['baraja','Baraja'],['vice','Miami'],['chat','Chat']].map(([v,l])=>`<button class="${SKIN()===v?'on':''}" data-a="skin" data-p="${v}" aria-pressed="${SKIN()===v}">${l}</button>`).join('')}</div></div>
   <button class="set" data-a="colors"><span>Colores<small>Pinta la app a tu gusto (solo en este móvil)</small></span></button>
   <button class="set" data-a="trash"><span>Papelera<small>Partidas borradas de la liga (pide PIN)</small></span></button>
   <button class="set" data-a="logout"><span>Cerrar sesión de la liga<small>Pide de nuevo el código para entrar</small></span></button>
@@ -3268,16 +3385,18 @@ const PAINT_B=[['--bg','Tapete','el fondo de la mesa'],['--surface','Naipe','pap
   ['--accent','Oros','botón principal'],['--on-accent','Sobre oros','letra del botón principal'],
   ['--a','Copas','pareja de la izquierda'],['--b','Espadas','pareja de la derecha'],
   ['--ok','Bastos','victorias y en línea'],['--danger','Peligro','borrar y errores'],['--warn','Lacre','órdago y etiquetas']];
-const paintList=()=>({neon:PAINT,glass:PAINT_G,baraja:PAINT_B})[SKIN()];
+const paintList=()=>({neon:PAINT,glass:PAINT_G,baraja:PAINT_B,vice:PAINT_G,chat:PAINT_G})[SKIN()];
 const PAINT=[['--bg','Fondo','detrás de todo'],['--surface','Cristal','tinte de cajas y diálogos'],['--surface2','Cristal 2','tinte de fichas y ajustes'],
   ['--line','Tubo neutro','bordes sin color y reflejos'],['--text','Texto','letras'],['--muted','Texto suave','ayudas y fechas'],
   ['--accent','Neón principal','botones y títulos'],['--on-accent','Sobre neón','letra sobre tubos rellenos'],
   ['--a','Neón equipo 1','pareja de la izquierda'],['--b','Neón equipo 2','pareja de la derecha'],
   ['--ok','Bien','victorias y en línea'],['--danger','Peligro','borrar y errores'],['--warn','Aviso','órdago y avisos']];
 // Retoques del usuario por modo: S.settings.custom = {dark:{'--bg':'#…'}, light:{…}}
-const SKINS=['neon','glass','baraja'];
+const SKINS=['neon','glass','baraja','vice','chat'];
 const SKIN=()=>SKINS.includes(S.settings.skin)?S.settings.skin:'neon';
-const CK=()=>({neon:'custom',glass:'customG',baraja:'customB'})[SKIN()]; // retoques del pincel por estilo
+// Miami y Chat se montan encima de la hoja de Cristal (misma estructura, otra piel)
+const SKIN_BASE={vice:'glass',chat:'glass'};
+const CK=()=>({neon:'custom',glass:'customG',baraja:'customB',vice:'customV',chat:'customC'})[SKIN()]; // retoques del pincel por estilo
 const customOf=()=>{const c=S.settings[CK()]||{};return c[isDark()?'dark':'light']||{}};
 // Valor actual de una variable en #rrggbb (para el selector de color)
 const tokCv=document.createElement('canvas').getContext('2d');
@@ -3322,6 +3441,8 @@ function basePaint(st,hex){
   if(!/^#[0-9a-f]{6}$/i.test(hex||''))return;
   if(SKIN()==='glass')return basePaintG(st,hex);
   if(SKIN()==='baraja')return basePaintB(st,hex);
+  // Miami y Chat guardan su paleta; el color rápido solo cambia el principal
+  if(SKIN()==='vice'||SKIN()==='chat'){st.setProperty('--accent',hex);st.setProperty('--a',hex);st.setProperty('--a-soft',hex+'24');return}
   // Receta neón: en oscuro, fondo casi negro teñido y tubos muy vivos; en claro, vidrio pálido y tubos más hondos
   const[h,s0]=toHS(hex),gray=s0<8,s=gray?0:Math.max(75,Math.min(100,s0)),hb=(h+150)%360;
   const c=(H,S_,L,a)=>`hsl(${H} ${S_}% ${L}%${a==null?'':' / '+a})`;
@@ -3379,7 +3500,7 @@ function patchEl(o,n){
 function render(){
   const ver=!!verCode(),locked=!S.code&&!ver,v=ver?'ver':locked?'lock':view(),st=S.settings;
   if(st.theme==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=st.theme;
-  const sk=SKIN();for(const k of SKINS)document.getElementById('sk-'+k).media=sk===k?'all':'not all';
+  const sk=SKIN();for(const k of SKINS)document.getElementById('sk-'+k).media=sk===k||SKIN_BASE[sk]===k?'all':'not all';
   paint();
   liveSync();
   const html=ver?vVer():locked?vLock():v==='mus'?vMus():v==='settings'?vSettings():v==='liga'?vLiga():v==='partidas'?vMatches():vHome();
@@ -3460,7 +3581,7 @@ function landscape(on){
 render();sync();
 // Actualización: al abrir y al volver a la app se mira si hay versión publicada nueva y, si la hay, se recarga.
 // BUILD lo cambia "npm run publicar" en la copia publicada; en desarrollo vale 'dev' y no se comprueba.
-const BUILD='20261122213206';
+const BUILD='20261125205129';
 let upChecking=false;
 async function checkUpdate(){
   if(BUILD==='dev'||upChecking||!navigator.onLine||modal)return; // con un diálogo abierto se espera a la próxima
